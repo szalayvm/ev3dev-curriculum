@@ -48,6 +48,7 @@ Authors: David Fisher and Peter Venema.
 #       that would roughly fit most of your data.  Put your value for m below and think about if it most fits:
 #
 #       speed_in_inches_per_second = m * speed_in_degrees_per_second + 0
+#       speed = .0106 * speed_deg
 #
 #     Eventually your goal is to make an equation that will allow users to input any distance in inches and any speed in
 #     degrees per second, then output the time needed to drive the correct distance at that speed.  So eventually you
@@ -58,13 +59,13 @@ Authors: David Fisher and Peter Venema.
 #   Note: To repeat again, in later modules you will learn different (better) ways to travel a given distance using
 #     motor encoders, so just make a simple rough approximation here, since later we'll do it better in a different way.
 #
-# TODO: 3. Copy the content of the /examples/motors/drive_input_speed.py program and place it below these comments.
+# Done: 3. Copy the content of the /examples/motors/drive_input_speed.py program and place it below these comments.
 #   Change the initial print and speak commands to reflect this module, like this...
 #    print("--------------------------------------------")
 #    print("  Timed Driving")
 #    print("--------------------------------------------")
 #    ev3.Sound.speak("Timed Driving").wait()
-# TODO: 4. Change the input questions from:
+# Done: 4. Change the input questions from:
 #   Enter a speed for the left motor (0 to 900 dps):
 #   Enter a speed for the right motor (0 to 900 dps):
 #   Enter a time to drive (seconds):
@@ -89,3 +90,50 @@ Authors: David Fisher and Peter Venema.
 # TODO: 8. Call over a TA or instructor to sign your team's checkoff sheet and do a code review.
 #
 #  Observation you should make, the pattern run_forever-->time.sleep-->stop naturally blocks code execution until done.
+#!/usr/bin/env python3
+"""
+This demo lets you see how to use an input prompt to test different drive speeds.
+
+Author: David Fisher.
+"""
+
+import ev3dev.ev3 as ev3
+import time
+
+
+def main():
+    print("--------------------------------------------")
+    print("  Timed Driving")
+    print("--------------------------------------------")
+    ev3.Sound.speak("Timed Driving").wait()
+
+    # Connect two large motors on output ports B and C
+    left_motor = ev3.LargeMotor(ev3.OUTPUT_B)
+    right_motor = ev3.LargeMotor(ev3.OUTPUT_C)
+
+    # Check that the motors are actually connected
+    assert left_motor.connected
+    assert right_motor.connected
+
+    time_s = 1  # Any value other than 0.
+    while time_s != 0:
+        speed = int(input("Enter a speed(0 to 900): "))
+        dist = int(input("Distance to travel(inches): "))
+        speedInchesSec = speed * .0106
+        sec = dist/speedInchesSec
+
+        left_motor.run_forever(speed_sp=speed)
+        right_motor.run_forever(speed_sp=speed)
+
+        time.sleep(sec)
+        left_motor.stop()
+        right_motor.stop(stop_action="brake")
+
+    print("Goodbye!")
+    ev3.Sound.speak("Goodbye").wait()
+
+
+# ----------------------------------------------------------------------
+# Calls  main  to start the ball rolling.
+# ----------------------------------------------------------------------
+main()
