@@ -21,3 +21,14 @@ class Snatch3r(object):
     
     # TODO: Implement the Snatch3r class as needed when working the sandbox exercises
     # (and delete these comments)
+
+    def drive_inches(self, inches_to_target, speedDegrees):
+        left_motor = ev3.LargeMotor(ev3.OUTPUT_B)
+        right_motor = ev3.LargeMotor(ev3.OUTPUT_C)
+        degreeToInch = 90
+        deg = inches_to_target * degreeToInch
+
+        left_motor.run_to_rel_pos(speed_sp=speedDegrees, position_sp=deg, stop_action='brake')
+        right_motor.run_to_rel_pos(speed_sp=speedDegrees, position_sp=deg, stop_action='brake')
+        left_motor.wait_while(ev3.Motor.STATE_RUNNING)
+        right_motor.wait_while(ev3.Motor.STATE_RUNNING)
