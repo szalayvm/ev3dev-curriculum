@@ -70,20 +70,20 @@ def main():
         #   Optional: You can also comment out the code above that does the 6 second red, green, off pattern.  It was
         #     there just to provide you with code examples for using the LEDs.  It does not need to run anymore.
         #     Just make sure not to comment out too much. ;)
-        # btn = ev3.Button()
-        # for _ in range(10):
-        #     if btn.left:
-        #         print("left")
-        #         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
-        #         ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
-        #     elif btn.right:
-        #         print("right")
-        #         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
-        #         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.BLACK)
-        #     elif btn.up:
-        #         print("up")
-        #         ev3.Leds.all_off()
-        #     time.sleep(1.0)
+        btn = ev3.Button()
+        for _ in range(10):
+            if btn.left:
+                print("left")
+                ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
+                ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
+            elif btn.right:
+                print("right")
+                ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
+                ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.BLACK)
+            elif btn.up:
+                print("up")
+                ev3.Leds.all_off()
+            time.sleep(1.0)
 
 
 
@@ -98,10 +98,34 @@ def main():
         # if counter = 2 --> both LEDs red
         # if counter = 3 --> both LEDs amber
         # if counter = 4 --> wrap around to make both LEDs green
-        # while btn.down.is_pressed:
+
+        counter = 0
+        for __ in range(10):  # loop forever
+
+            while not btn.down: # while button is not pressed, do nothing
+                time.sleep(0.01)
+
+            # while btn.down is true, keep repeating until button is false, then move on
+            while btn.down:
+                time.sleep(0.01)
+
+            counter = counter + 1
+            if counter == 1: # green
+                ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
+                ev3.Leds.set_color(ev3.Leds.RIGHT,ev3.Leds.GREEN)
+
+            elif counter == 2: # red
+                ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
+                ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
+            elif counter == 3: # amber
+                ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.AMBER)
+                ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.AMBER)
+            else:
+                ev3.Leds.all_off()
+                counter = 0
         #
         # counter = 0
-        # for __ in range(10):
+        #
         #     if counter == 0:
         #         counter = counter + 1
         #         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
