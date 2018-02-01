@@ -24,7 +24,7 @@ class Snatch3r(object):
         assert self.left_motor
         assert self.right_motor
 
-    def drive_inches(self, inches_to_target, speed_degrees):
+    def drive_inches(self, inches_to_target, speed_deg):
         """ Takes in inches needed for travel and speed at which to travel and makes robot move that distance at that speed.
         Input: inches_to_target (int), speedDegrees(int)
         Output: None
@@ -32,22 +32,20 @@ class Snatch3r(object):
         degree_to_inch = 90
         deg = inches_to_target * degree_to_inch
 
-        self.left_motor.run_to_rel_pos(speed_sp=speed_degrees, position_sp=deg, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
-        self.right_motor.run_to_rel_pos(speed_sp=speed_degrees, position_sp=deg, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+        self.left_motor.run_to_rel_pos(speed_sp=speed_deg, position_sp=deg, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+        self.right_motor.run_to_rel_pos(speed_sp=speed_deg, position_sp=deg, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
         self.left_motor.wait_while(ev3.Motor.STATE_RUNNING)
         self.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
 
-    def turn_degrees(self,degrees_to_turn, turn_speed_sp):
+    def turn_degrees(self, degrees_to_turn, turn_speed_sp):
         """ Takes in degrees you want the robot to turn and the speed at which the robot should complete the turns.
           Input: degrees_to_turn(int), turn_speed_sp(int)
           Output: None
           Side Effects: None
           """
+        brake = ev3.Motor.STOP_ACTION_BRAKE
         if degrees_to_turn > 0:
-            self.left_motor.run_to_rel_pos(speed_sp=turn_speed_sp, position_sp=-degrees_to_turn*5, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
-            self.right_motor.run_to_rel_pos(speed_sp=turn_speed_sp, position_sp=degrees_to_turn*5, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
-        else:
-            self.left_motor.run_to_rel_pos(speed_sp=turn_speed_sp, position_sp=-degrees_to_turn*5, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
-            self.right_motor.run_to_rel_pos(speed_sp=turn_speed_sp, position_sp=degrees_to_turn*5, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+            self.left_motor.run_to_rel_pos(speed_sp=turn_speed_sp, position_sp=-degrees_to_turn*5, stop_action=brake)
+            self.right_motor.run_to_rel_pos(speed_sp=turn_speed_sp, position_sp=degrees_to_turn*5, stop_action=brake)
         self.left_motor.wait_while(ev3.Motor.STATE_RUNNING)
         self.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
