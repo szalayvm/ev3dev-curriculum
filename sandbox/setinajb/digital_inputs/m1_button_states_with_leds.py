@@ -98,35 +98,27 @@ def main():
         # if counter = 2 --> both LEDs red
         # if counter = 3 --> both LEDs amber
         # if counter = 4 --> wrap around to make both LEDs green
-        while btn.down.is_pressed:
-            
-
-
-        counter = 0
-        for __ in range(10):
-            if counter == 0:
-                counter = counter + 1
-                ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
-                ev3.Leds.set_color(ev3.Leds.RIGHT,ev3.Leds.GREEN)
-            elif counter == 1:
-                counter = counter + 1
-                ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
-                ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
-            elif counter ==2:
-                counter = counter + 1
-                ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.AMBER)
-                ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.AMBER)
-            elif counter == 3:
-                counter = counter + 1
-                ev3.Leds.all_off()
-            elif counter > 3:
-                counter = 0
-
-
-
-
-
-
+        # while btn.down.is_pressed:
+        #
+        # counter = 0
+        # for __ in range(10):
+        #     if counter == 0:
+        #         counter = counter + 1
+        #         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
+        #         ev3.Leds.set_color(ev3.Leds.RIGHT,ev3.Leds.GREEN)
+        #     elif counter == 1:
+        #         counter = counter + 1
+        #         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
+        #         ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
+        #     elif counter ==2:
+        #         counter = counter + 1
+        #         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.AMBER)
+        #         ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.AMBER)
+        #     elif counter == 3:
+        #         counter = counter + 1
+        #         ev3.Leds.all_off()
+        #     elif counter > 3:
+        #         counter = 0
 
 
 
