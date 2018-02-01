@@ -36,7 +36,7 @@ def main():
     # Beep is a simple and useful sound.
     ev3.Sound.beep().wait()
     ev3.Sound.beep().wait()
-    print('Press Ctrl C on your keyboard to exit this program (the Back button is not wired up to exit)')
+    print('Press Back button to exit program.')
 
     # Making a simple class is the best way to pass around data between different events.
     dc = DataContainer()
@@ -44,24 +44,25 @@ def main():
     # Buttons on EV3 (we keep giving you this line, but you could have typed it)
     btn = ev3.Button()
 
-    # TODO: 3. Just below this comment add SIMPLE (no lambda) callbacks for:
+    # Done: 3. Just below this comment add SIMPLE (no lambda) callbacks for:
     #   .on_up to call handle_up_button (that function already exist below, you will modify it in todo4)
     #   .on_down to call handle_down_button (that function does not exist yet, you will write it in todo4)
     #   .on_left to call handle_left_button (that function does not exist yet, you will write it in todo4)
     #   .on_right to call handle_right_button (that function does not exist yet, you will write it in todo4)
     # Here is one for free...
     #  btn.on_up = handle_up_button
-    btn.on_up = handle_up_button()
-    btn.on_down = handle_down_button()
-    btn.on_left = handle_left_button()
-    btn.on_right = handle_right_button()
+    btn.on_up = handle_up_button
+    btn.on_down = handle_down_button
+    btn.on_left = handle_left_button
+    btn.on_right = handle_right_button
 
-    # TODO: 5. Note #4 is lower (this is TO DO #5 which you should do after #4).
+    # Done: 5. Note #4 is lower (this is TO DO #5 which you should do after #4).
     # Add a lambda callback for on_backspace.  The syntax of lambda is:
     #   btn.on_backspace = lamdba predefined_inputs: function_name(parameters)
     # You will need to change the predefined_inputs, function_name, and parameters from that syntax template.
     # Using lambda call the function handle_shutdown passing in the state and dc
     # Note: the function handle_shutdown does not exist yet, you will write it in todo6.
+    btn.on_backspace = lambda btn_state, dc: handle_shutdown(btn_state, dc)
 
     while dc.running:
         btn.process()  # This command is VERY important when using button callbacks!
@@ -96,6 +97,7 @@ def handle_up_button(button_state):
 
 
 def handle_down_button(button_state):
+    """Handle IR/button event"""
     if button_state:
         print("Down button is pressed")
         play_song_by_notes_list()
@@ -121,7 +123,7 @@ def handle_right_button(button_state):
 
 
 
-# TODO: 6. Implement the handle_shutdown function.
+# Done: 6. Implement the handle_shutdown function.
 #   Function signature should be:
 #       def handle_shutdown(button_state, dc):
 #   When the button is pressed (state is True)
@@ -133,7 +135,11 @@ def handle_right_button(button_state):
 # You can also change the print message that said:
 #    "Press Ctrl C on your keyboard to exit this program (the Back button is not wired up to exit)"
 # to instead say "Press Back to exit this program."
-
+def handle_shutdown(button_state,dc):
+    """Handle IR/button event"""
+    if button_state:
+        print('back')
+        dc.running = False
 
 # TODO: 7. Call over a TA or instructor to sign your team's checkoff sheet and do a code review.
 #
