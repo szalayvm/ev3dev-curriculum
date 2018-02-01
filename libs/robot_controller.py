@@ -17,7 +17,7 @@ import ev3dev.ev3 as ev3
 class Snatch3r(object):
     """Commands for the Snatch3r robot that might be useful in many different programs."""
     def __init__(self):
-        """Constructs all necessary initial instance variables for the snatch3r class."""
+        """ Constructs all necessary initial instance variables for the snatch3r class."""
         self.left_motor = ev3.LargeMotor(ev3.OUTPUT_B)
         self.right_motor = ev3.LargeMotor(ev3.OUTPUT_C)
 
@@ -27,16 +27,27 @@ class Snatch3r(object):
     def drive_inches(self, inches_to_target, speed_degrees):
         """ Takes in inches needed for travel and speed at which to travel and makes robot move that distance at that speed.
         Input: inches_to_target (int), speedDegrees(int)
-        Output: None"""
+        Output: None
+        """
         degree_to_inch = 90
         deg = inches_to_target * degree_to_inch
 
-        self.left_motor.run_to_rel_pos(speed_sp=speed_degrees, position_sp=deg, stop_action='brake')
-        self.right_motor.run_to_rel_pos(speed_sp=speed_degrees, position_sp=deg, stop_action='brake')
+        self.left_motor.run_to_rel_pos(speed_sp=speed_degrees, position_sp=deg, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+        self.right_motor.run_to_rel_pos(speed_sp=speed_degrees, position_sp=deg, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
         self.left_motor.wait_while(ev3.Motor.STATE_RUNNING)
         self.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
 
-    def turn_degrees(self,degrees_to_turn,turn_speed_sp):
-
-        self.left_motor.run_to_rel_pos(speed_sp=turn_speed_sp,position_sp=-1*degrees_to_turn,stop_action='brake')
-        self.right_motor.run_to_rel_pos(speed_sp=turn_speed_sp,position_sp=degrees_to_turn,stop_action='brake')
+    def turn_degrees(self,degrees_to_turn, turn_speed_sp):
+        """ Takes in degrees you want the robot to turn and the speed at which the robot should complete the turns.
+          Input: degrees_to_turn(int), turn_speed_sp(int)
+          Output: None
+          Side Effects: None
+          """
+        if degrees_to_turn > 0:
+            self.left_motor.run_to_rel_pos(speed_sp=turn_speed_sp, position_sp=-degrees_to_turn*5, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+            self.right_motor.run_to_rel_pos(speed_sp=turn_speed_sp, position_sp=degrees_to_turn*5, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+        else:
+            self.left_motor.run_to_rel_pos(speed_sp=turn_speed_sp, position_sp=-degrees_to_turn*5, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+            self.right_motor.run_to_rel_pos(speed_sp=turn_speed_sp, position_sp=degrees_to_turn*5, stop_action=ev3.Motor.STOP_ACTION_BRAKE)
+        self.left_motor.wait_while(ev3.Motor.STATE_RUNNING)
+        self.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
