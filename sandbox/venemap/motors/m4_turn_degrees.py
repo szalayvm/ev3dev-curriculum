@@ -48,3 +48,39 @@ Authors: David Fisher and PUT_YOUR_NAME_HERE.
 # TODO: 6. Call over a TA or instructor to sign your team's checkoff sheet and do a code review.
 #
 # Observations you should make, using run_to_rel_pos is useful for accurate turns, but testing takes time.
+import ev3dev.ev3 as ev3
+import robot_controller as robo
+
+
+def main():
+    # --------------------------------------------------------------
+    # We have already implemented this module for you.
+    # There are no TODOs in the code.  Do NOT modify it.
+    # You are not allowed to make any changes to this code.
+    # --------------------------------------------------------------
+    print("--------------------------------------------")
+    print(" Turn Degrees")
+    print("--------------------------------------------")
+    ev3.Sound.speak("Turn degrees").wait()
+    robot = robo.Snatch3r()
+
+    while True:
+        turn_speed_sp = int(input("Speed (0 to 900 dps): "))
+        if turn_speed_sp == 0:
+            break
+        degrees_to_turn = int(input("Degrees (degrees): "))
+        if degrees_to_turn == 0:
+            break
+
+        robot.turn_degrees(degrees_to_turn, turn_speed_sp)
+        ev3.Sound.beep().wait()  # Fun little beep
+
+    print("Goodbye!")
+    ev3.Sound.speak("Goodbye").wait()
+
+
+# ----------------------------------------------------------------------
+# Calls  main  to start the ball rolling.
+# ----------------------------------------------------------------------
+main()
+
