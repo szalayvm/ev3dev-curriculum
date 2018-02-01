@@ -70,6 +70,12 @@ def main():
         #   Optional: You can also comment out the code above that does the 6 second red, green, off pattern.  It was
         #     there just to provide you with code examples for using the LEDs.  It does not need to run anymore.
         #     Just make sure not to comment out too much. ;)
+        if btn.up:
+            print('up')
+            ev3.Leds.all_off()
+        elif btn.left:
+            print('left')
+            ev3.Leds.set_color(ev3.Leds.LEFT,ev3.Leds.GREEN)
 
         # TODO: 4. Implement the down button to change the color of both LEDs.
         #   The first press to down should make both LEDs GREEN, the next press makes them RED, then AMBER, then off.

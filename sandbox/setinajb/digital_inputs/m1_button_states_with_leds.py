@@ -5,8 +5,8 @@ This module lets you practice using the buttons on the EV3 as states.
 Normally we'll use event callbacks with buttons, but this example uses buttons as states for the purposes of example.
 Much like we did in szalayvm of the motors unit, later we will show you different (better) ways to use buttons.
 
-Authors: David Fisher and PUT_YOUR_NAME_HERE.
-"""  # TODO: 1. PUT YOUR NAME IN THE ABOVE LINE.
+Authors: David Fisher and Jaclyn Setina.
+"""  # DONE: 1. PUT YOUR NAME IN THE ABOVE LINE.
 
 # TODO: 2. Have someone on your team run this program as is on the EV3 and make sure everyone understands the code.
 #   You will exit the program by pressing the back button on the EV3 brick (button just below the screen).
@@ -70,6 +70,22 @@ def main():
         #   Optional: You can also comment out the code above that does the 6 second red, green, off pattern.  It was
         #     there just to provide you with code examples for using the LEDs.  It does not need to run anymore.
         #     Just make sure not to comment out too much. ;)
+        # btn = ev3.Button()
+        # for _ in range(10):
+        #     if btn.left:
+        #         print("left")
+        #         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
+        #         ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
+        #     elif btn.right:
+        #         print("right")
+        #         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
+        #         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.BLACK)
+        #     elif btn.up:
+        #         print("up")
+        #         ev3.Leds.all_off()
+        #     time.sleep(1.0)
+
+
 
         # TODO: 4. Implement the down button to change the color of both LEDs.
         #   The first press to down should make both LEDs GREEN, the next press makes them RED, then AMBER, then off.
@@ -78,6 +94,33 @@ def main():
         #   Since you are only allowed to use states, not event callbacks, this last request is a pain, but it's doable
         #     with a while loop that blocks code execution until the down instance variable is False.
         #     Use a time.sleep(0.01) inside the while loop to do nothing but wait for the button to be released.
+        # if counter = 1 --> both LEDs green
+        # if counter = 2 --> both LEDs red
+        # if counter = 3 --> both LEDs amber
+        # if counter = 4 --> wrap around to make both LEDs green
+        # while btn.down.is_pressed:
+        #
+        # counter = 0
+        # for __ in range(10):
+        #     if counter == 0:
+        #         counter = counter + 1
+        #         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
+        #         ev3.Leds.set_color(ev3.Leds.RIGHT,ev3.Leds.GREEN)
+        #     elif counter == 1:
+        #         counter = counter + 1
+        #         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
+        #         ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
+        #     elif counter ==2:
+        #         counter = counter + 1
+        #         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.AMBER)
+        #         ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.AMBER)
+        #     elif counter == 3:
+        #         counter = counter + 1
+        #         ev3.Leds.all_off()
+        #     elif counter > 3:
+        #         counter = 0
+
+
 
         # TODO: 5. Formally test your work. When you think you have the problem complete run these tests:
         #   Press Left - Green left LED is on (try holding the button down for a few seconds when you to the press)
