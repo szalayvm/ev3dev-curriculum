@@ -20,28 +20,28 @@ def main():
     print("--------------------------------------------")
     print(" Buttons and LEDs")
     print("--------------------------------------------")
-    ev3.Sound.speak("Buttons and L E Dees").wait()
+    # ev3.Sound.speak("Buttons and L E Dees").wait()
 
     # Opening LED dance (to show the LED syntax)
     # Red LEDs
-    ev3.Sound.speak("Red")
+    # ev3.Sound.speak("Red")
     ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
     ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
     time.sleep(3)
 
     # Green LEDs
-    ev3.Sound.speak("Green")
+    # ev3.Sound.speak("Green")
     ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
     ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
     time.sleep(3)
 
     # Turn LEDs off
-    ev3.Sound.speak("Off")
+    # ev3.Sound.speak("Off")
     ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.BLACK)
     ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
-    # ev3.Leds.all_off()  # Could also use this single command if turning both LEDs off.
+    ev3.Leds.all_off()  # Could also use this single command if turning both LEDs off.
     print('Press the Back button on the EV3 to exit this program.')
-
+    #
     # Buttons on EV3 (the real focus of this module)
     btn = ev3.Button()  # Construct the one and only EV3 Button object
     led_colors = [ev3.Leds.BLACK,  # This list is useful for the down button in TO DO 4.
@@ -53,7 +53,7 @@ def main():
 
     current_color_index = 0
     while True:
-        # TODO: 3. Implement the left, right, and up buttons as follows:
+        # DONE: 3. Implement the left, right, and up buttons as follows:
         #    When the up button is being pressed:
         #      -- print the word "up"
         #      -- turn off all LEDs
@@ -70,22 +70,23 @@ def main():
         #   Optional: You can also comment out the code above that does the 6 second red, green, off pattern.  It was
         #     there just to provide you with code examples for using the LEDs.  It does not need to run anymore.
         #     Just make sure not to comment out too much. ;)
+
+        # Create a button instance
         btn = ev3.Button()
-        for _ in range(10):
+        print('Doing other buttons')
+        for k in range(10):
             if btn.left:
                 print("left")
                 ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
                 ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
             elif btn.right:
                 print("right")
-                ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
+                ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
                 ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.BLACK)
             elif btn.up:
                 print("up")
                 ev3.Leds.all_off()
-            time.sleep(1.0)
-
-
+            time.sleep(0.1)
 
         # TODO: 4. Implement the down button to change the color of both LEDs.
         #   The first press to down should make both LEDs GREEN, the next press makes them RED, then AMBER, then off.
@@ -99,10 +100,11 @@ def main():
         # if counter = 3 --> both LEDs amber
         # if counter = 4 --> wrap around to make both LEDs green
 
+        print('Doing down button')
         counter = 0
-        for __ in range(10):  # loop forever
+        for j in range(10):  # loop forever
 
-            while not btn.down: # while button is not pressed, do nothing
+            while not btn.down:  # while button is not pressed, do nothing
                 time.sleep(0.01)
 
             # while btn.down is true, keep repeating until button is false, then move on
@@ -110,41 +112,19 @@ def main():
                 time.sleep(0.01)
 
             counter = counter + 1
-            if counter == 1: # green
+            if counter == 1:  # green
                 ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
                 ev3.Leds.set_color(ev3.Leds.RIGHT,ev3.Leds.GREEN)
 
-            elif counter == 2: # red
+            elif counter == 2:  # red
                 ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
                 ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
-            elif counter == 3: # amber
+            elif counter == 3:  # amber
                 ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.AMBER)
                 ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.AMBER)
             else:
                 ev3.Leds.all_off()
                 counter = 0
-        #
-        # counter = 0
-        #
-        #     if counter == 0:
-        #         counter = counter + 1
-        #         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
-        #         ev3.Leds.set_color(ev3.Leds.RIGHT,ev3.Leds.GREEN)
-        #     elif counter == 1:
-        #         counter = counter + 1
-        #         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
-        #         ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
-        #     elif counter ==2:
-        #         counter = counter + 1
-        #         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.AMBER)
-        #         ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.AMBER)
-        #     elif counter == 3:
-        #         counter = counter + 1
-        #         ev3.Leds.all_off()
-        #     elif counter > 3:
-        #         counter = 0
-
-
 
         # TODO: 5. Formally test your work. When you think you have the problem complete run these tests:
         #   Press Left - Green left LED is on (try holding the button down for a few seconds when you to the press)
