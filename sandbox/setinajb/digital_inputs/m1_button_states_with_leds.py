@@ -52,6 +52,10 @@ def main():
                   ev3.Leds.AMBER]
 
     current_color_index = 0
+    # Create a button
+    btn = ev3.Button()
+    counter = 0
+
     while True:
         # DONE: 3. Implement the left, right, and up buttons as follows:
         #    When the up button is being pressed:
@@ -71,22 +75,20 @@ def main():
         #     there just to provide you with code examples for using the LEDs.  It does not need to run anymore.
         #     Just make sure not to comment out too much. ;)
 
-        # Create a button instance
-        btn = ev3.Button()
-        print('Doing other buttons')
-        for k in range(10):
-            if btn.left:
-                print("left")
-                ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
-                ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
-            elif btn.right:
-                print("right")
-                ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
-                ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.BLACK)
-            elif btn.up:
-                print("up")
-                ev3.Leds.all_off()
-            time.sleep(0.1)
+        # need a while true loop
+        if btn.left:
+            print("left")
+            ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
+            ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
+        if btn.right:  # should be an if because more than one button can be pressed at a time
+            print("right")
+            ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
+            ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.BLACK)
+        if btn.up:
+            print("up")
+            ev3.Leds.all_off()
+
+        # check for when button is pressed down constantly - YES!!
 
         # TODO: 4. Implement the down button to change the color of both LEDs.
         #   The first press to down should make both LEDs GREEN, the next press makes them RED, then AMBER, then off.
@@ -95,36 +97,33 @@ def main():
         #   Since you are only allowed to use states, not event callbacks, this last request is a pain, but it's doable
         #     with a while loop that blocks code execution until the down instance variable is False.
         #     Use a time.sleep(0.01) inside the while loop to do nothing but wait for the button to be released.
-        # if counter = 1 --> both LEDs green
-        # if counter = 2 --> both LEDs red
-        # if counter = 3 --> both LEDs amber
-        # if counter = 4 --> wrap around to make both LEDs green
 
-        print('Doing down button')
-        counter = 0
-        for j in range(10):  # loop forever
-
-            while not btn.down:  # while button is not pressed, do nothing
-                time.sleep(0.01)
-
-            # while btn.down is true, keep repeating until button is false, then move on
-            while btn.down:
-                time.sleep(0.01)
+        # while btn.down is true, keep repeating until button is false, then move on
+        if btn.down:
 
             counter = counter + 1
             if counter == 1:  # green
                 ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
                 ev3.Leds.set_color(ev3.Leds.RIGHT,ev3.Leds.GREEN)
-
-            elif counter == 2:  # red
+                while btn.down:
+                    time.sleep(0.01)
+    # while button == true or false, do a while loop to stop the code unless user releases button
+            if counter == 2:  # red
                 ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
                 ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
-            elif counter == 3:  # amber
+                while btn.down:
+                    time.sleep(0.01)
+            if counter == 3:  # amber
                 ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.AMBER)
                 ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.AMBER)
-            else:
+                while btn.down:
+                    time.sleep(0.01)
+            if counter > 3:
                 ev3.Leds.all_off()
+                while btn.down:
+                    time.sleep(0.01)
                 counter = 0
+
 
         # TODO: 5. Formally test your work. When you think you have the problem complete run these tests:
         #   Press Left - Green left LED is on (try holding the button down for a few seconds when you to the press)
