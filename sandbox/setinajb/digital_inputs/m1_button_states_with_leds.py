@@ -8,7 +8,7 @@ Much like we did in szalayvm of the motors unit, later we will show you differen
 Authors: David Fisher and Jaclyn Setina.
 """  # DONE: 1. PUT YOUR NAME IN THE ABOVE LINE.
 
-# TODO: 2. Have someone on your team run this program as is on the EV3 and make sure everyone understands the code.
+# DONE: 2. Have someone on your team run this program as is on the EV3 and make sure everyone understands the code.
 #   You will exit the program by pressing the back button on the EV3 brick (button just below the screen).
 #   The back button is already implemented to exit the program (as you can see in the code below).
 
@@ -43,15 +43,15 @@ def main():
     print('Press the Back button on the EV3 to exit this program.')
     #
     # Buttons on EV3 (the real focus of this module)
-    btn = ev3.Button()  # Construct the one and only EV3 Button object
-    led_colors = [ev3.Leds.BLACK,  # This list is useful for the down button in TO DO 4.
-                  ev3.Leds.GREEN,
-                  ev3.Leds.RED,
-                  # ev3.Leds.ORANGE,  # Too close to another color in my opinion
-                  # ev3.Leds.YELLOW,  # Too close to another color in my opinion
-                  ev3.Leds.AMBER]
+    # btn = ev3.Button()  # Construct the one and only EV3 Button object
+    # led_colors = [ev3.Leds.BLACK,  # This list is useful for the down button in TO DO 4.
+    #               ev3.Leds.GREEN,
+    #               ev3.Leds.RED,
+    #               # ev3.Leds.ORANGE,  # Too close to another color in my opinion
+    #               # ev3.Leds.YELLOW,  # Too close to another color in my opinion
+    #               ev3.Leds.AMBER]
 
-    current_color_index = 0
+    # current_color_index = 0
     # Create a button
     btn = ev3.Button()
     counter = 0
@@ -75,22 +75,24 @@ def main():
         #     there just to provide you with code examples for using the LEDs.  It does not need to run anymore.
         #     Just make sure not to comment out too much. ;)
 
-        # need a while true loop
+        # if the left button is pressed, print "left" and turn on the left LED set to green
         if btn.left:
             print("left")
             ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
             ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.BLACK)
-        if btn.right:  # should be an if because more than one button can be pressed at a time
+        # if the right button is pressed, print "right" and turn on the right LED set to red
+        if btn.right:  # an if statement is used because more than one button can be pressed at a time
             print("right")
             ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
             ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.BLACK)
+        # if the up button is pressed, print "up" and turn all LEDs off
         if btn.up:
             print("up")
             ev3.Leds.all_off()
 
         # check for when button is pressed down constantly - YES!!
 
-        # TODO: 4. Implement the down button to change the color of both LEDs.
+        # DONE: 4. Implement the down button to change the color of both LEDs.
         #   The first press to down should make both LEDs GREEN, the next press makes them RED, then AMBER, then off.
         #   If the user presses the down button again, wrap around the list to GREEN and continue as before.
         #   If the user holds down the button, figure out how to make the color change still only happen once.
@@ -99,12 +101,13 @@ def main():
         #     Use a time.sleep(0.01) inside the while loop to do nothing but wait for the button to be released.
 
         # while btn.down is true, keep repeating until button is false, then move on
+
         if btn.down:
 
             counter = counter + 1
             if counter == 1:  # green
                 ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
-                ev3.Leds.set_color(ev3.Leds.RIGHT,ev3.Leds.GREEN)
+                ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
                 while btn.down:
                     time.sleep(0.01)
     # while button == true or false, do a while loop to stop the code unless user releases button
@@ -124,8 +127,7 @@ def main():
                     time.sleep(0.01)
                 counter = 0
 
-
-        # TODO: 5. Formally test your work. When you think you have the problem complete run these tests:
+        # DONE: 5. Formally test your work. When you think you have the problem complete run these tests:
         #   Press Left - Green left LED is on (try holding the button down for a few seconds when you to the press)
         #   Press Right - Right right LED is on
         #   Press Up - Both LEDs are off
@@ -137,7 +139,7 @@ def main():
         #   Press Down - Both LEDs are Red (the cycle repeats)
         #   Press Back - Both LEDs turn Green, the robot says Goodbye and the program exits
 
-        # TODO: 6. Call over a TA or instructor to sign your team's checkoff sheet and do a code review.
+        # DONE: 6. Call over a TA or instructor to sign your team's checkoff sheet and do a code review.
         #
         # Observation you should make, working with buttons as 'states' is functional but usually 'events' work better.
         # Also observe that we don't use the Enter button.  Enter can cause issues since your program is running at the
