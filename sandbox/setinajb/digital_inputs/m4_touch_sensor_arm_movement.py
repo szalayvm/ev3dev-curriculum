@@ -35,13 +35,12 @@ def main():
 
         elif command_to_run == 'u':
             print("Move the arm to the up position")
-            print("TODO: 4 is to delete this print statement, uncomment the line below, and implement that function.")
             arm_up(arm_motor, touch_sensor)
 
         elif command_to_run == 'd':
             print("Move the arm to the down position")
-            print("TODO: 5 is to delete this print statement, uncomment the line below, and implement that function.")
-            # arm_down(arm_motor)
+            arm_down(arm_motor)
+
         elif command_to_run == 'q':
             break
         else:
@@ -98,7 +97,7 @@ def arm_up(arm_motor, touch_sensor):
       :type arm_motor: ev3.MediumMotor
       :type touch_sensor: ev3.TouchSensor
     """
-    # TODO: 4. Implement the arm up movement by fixing the code below
+    # DONE: 4. Implement the arm up movement by fixing the code below
     # Command the arm_motor to run forever in the positive direction at max speed.
     # Create a while loop that will block code execution until the touch sensor is pressed.
     #   Within the loop sleep for 0.01 to avoid running code too fast.
@@ -107,10 +106,11 @@ def arm_up(arm_motor, touch_sensor):
 
     """Core code that is used to move the arm to the up position."""
     arm_motor.run_forever(speed_sp=MAX_SPEED)
-    while touch_sensor.is_pressed:
+    while not touch_sensor.is_pressed:
         time.sleep(0.01)
     arm_motor.stop(stop_action="brake")
     ev3.Sound.beep().wait()
+
 
 def arm_down(arm_motor):
     """
@@ -127,6 +127,14 @@ def arm_down(arm_motor):
     # Code that attempts to do this task but has bugs.  Fix them.
     arm_motor.run_to_abs_pos()
     arm_motor.wait_while(ev3.Motor.STATE_HOLDING)  # Blocks until the motor finishes running
+
+    arm_revolutions_for_full_range = 14.2
+    rev_to_position = 14.2 * 360
+    arm_motor.run_to_rel_pos(position_sp=-rev_to_position)
+    arm_motor.wait_while(ev3.Motor.STATE_RUNNING)
+    ev3.Sound.beep().wait()
+
+
 
     # TODO: 6. After you fix the bugs in the three arm movement commands demo your code to a TA or instructor.
     #
