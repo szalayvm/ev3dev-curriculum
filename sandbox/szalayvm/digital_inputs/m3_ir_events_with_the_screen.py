@@ -69,16 +69,29 @@ def main():
     display_image(dc.lcd_screen, dc.eyes)  # Display an image on the EV3 screen
     ev3.Sound.speak("I R events with the Screen").wait()
 
-    # TODO: 3. Create a remote control object for channel 1. Add lambda callbacks for:
+    chan1 = ev3.RemoteControl(channel=1)
+    chan2 = ev3.RemoteControl(channel=2)
+    chan3 = ev3.RemoteControl(channel=3)
+    chan4 = ev3.RemoteControl(channel=4)
+
+    # Done: 3. Create a remote control object for channel 1. Add lambda callbacks for:
     #   .on_red_up    to call handle_red_up_1    (that exist already) with state and dc as parameters
     #   .on_red_down  to call handle_red_down_1  (that exist already) with state and dc as parameters
     #   .on_blue_up   to call handle_blue_up_1   (that exist already) with state and dc as parameters
     #   .on_blue_down to call handle_blue_down_1 (that exist already) with state and dc as parameters
+    chan1.on_red_up = lambda state: handle_red_up_1(state,dc)
+    chan1.on_red_down = lambda state: handle_red_down_1(state, dc)
+    chan1.on_blue_up = lambda state: handle_blue_up_1(state,dc)
+    chan1.on_blue_down = lambda state: handle_blue_down_1(state, dc)
 
-    # TODO: 5. Create remote control objects for channels 2, 3, and 4. Add lambda callbacks for on_red_up to each one:
+    # done: 5. Create remote control objects for channels 2, 3, and 4. Add lambda callbacks for on_red_up to each one:
     #   Channel 2's .on_red_up should call handle_red_up_2 (that exist already) with state and dc as parameters
     #   Channel 3's .on_red_up should call handle_red_up_3 (that exist already) with state and dc as parameters
     #   Channel 4's .on_red_up should call handle_red_up_4 (that exist already) with state and dc as parameters
+    chan2.on_red_up = lambda state: handle_red_up_2(state,dc)
+    chan3.on_red_up = lambda state: handle_red_up_3(state,dc)
+    chan4.on_red_up = lambda state: handle_red_up_4(state,dc)
+
 
     # Buttons on EV3
     btn = ev3.Button()
@@ -87,9 +100,13 @@ def main():
     while dc.running:
         # TODO: 4. Call the .process() method on your channel 1 RemoteControl object, then review and run your code.
         #   Review the handle functions below to see how they draw to the screen.  They are already finished.
+        chan1.process()
 
         # TODO: 6. Call the .process() method on your channel 2 - 4 RemoteControl objects and demo your code.
         #   Review the handle functions below to see how they draw to the screen.  They are already finished.
+        chan2.process()
+        chan3.process()
+        chan4.process()
 
         # TODO: 7. Call over a TA or instructor to sign your team's checkoff sheet and do a code review.
         #
