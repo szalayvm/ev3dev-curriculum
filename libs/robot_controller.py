@@ -27,6 +27,7 @@ class Snatch3r(object):
         self.LED = ev3.Leds
         assert self.left_motor
         assert self.right_motor
+        assert self.arm_motor
 
     def drive_inches(self, inches_to_target, speed_deg):
         """ Takes in inches needed for travel and speed at which to travel and makes robot move that distance at that speed.
@@ -57,7 +58,7 @@ class Snatch3r(object):
     def arm_up(self):
         """ Makes the robot put its arm all the way up
          Input: None
-         Output: None"""
+         Output: An audible Beep"""
         self.arm_motor.run_forever(speed_sp=self.MAX_SPEED)
         while not self.touch_sensor.is_pressed:
             time.sleep(0.01)
@@ -67,7 +68,7 @@ class Snatch3r(object):
     def arm_calibration(self):
         """ Makes the robot move its arm up and down with beeps in between
          Input: None
-         Output: None"""
+         Output: None """
         self.arm_motor.run_forever(speed_sp=self.MAX_SPEED)
         while not self.touch_sensor.is_pressed:
             time.sleep(0.01)
@@ -75,7 +76,6 @@ class Snatch3r(object):
         self.arm_motor.stop(stop_action="brake")
         ev3.Sound.beep().wait()
 
-        arm_revolutions_for_full_range = 14.2
         rev_to_position = 14.2 * 360
         self.arm_motor.run_to_rel_pos(position_sp=-rev_to_position)
         self.arm_motor.wait_while(ev3.Motor.STATE_RUNNING)
@@ -86,21 +86,22 @@ class Snatch3r(object):
     def arm_down(self):
         """ Makes the robot put its arm down
          Input: None
-         Output: None"""
+         Output: None """
         self.arm_motor.run_to_abs_pos()
         self.arm_motor.wait_while(ev3.Motor.STATE_HOLDING)  # Blocks until the motor finishes running
 
-        arm_revolutions_for_full_range = 14.2
         rev_to_position = 14.2 * 360
         self.arm_motor.run_to_rel_pos(position_sp=-rev_to_position)
         self.arm_motor.wait_while(ev3.Motor.STATE_RUNNING)
         ev3.Sound.beep().wait()
 
     def shutdown(self):
+        """ Shuts the robot down
+         Input: None
+         Output: Prints goodbye, beeps out goodbye """
         self.left_motor.stop()
         self.right_motor.stop()
         self.LED.set_color(self.LED.LEFT, self.LED.GREEN)
         self.LED.set_color(self.LED.RIGHT, self.LED.GREEN)
         print('goodbye')
         ev3.Sound.speak('Goodbye').wait()
-
