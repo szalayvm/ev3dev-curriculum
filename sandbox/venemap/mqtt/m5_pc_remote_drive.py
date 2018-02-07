@@ -72,7 +72,7 @@ def main():
     left_button = ttk.Button(main_frame, text="Left")
     left_button.grid(row=3, column=0)
     # left_button and '<Left>' key
-    left_button['command'] = lambda: handle_left(mqtt_client, left_speed_entry, right_speed_entry)
+    left_button['command'] = lambda: handle_left(mqtt_client, left_speed_entry.get(), right_speed_entry.get())
     root.bind('<Left>', lambda event: handle_left(mqtt_client, left_speed_entry, right_speed_entry))
 
     stop_button = ttk.Button(main_frame, text="Stop")
@@ -120,7 +120,7 @@ def main():
 # ----------------------------------------------------------------------
 # TODO: 4. Implement the functions for the drive button callbacks.
 def handle_left(mqtt_client, left_speed_entry, right_speed_entry):
-    mqtt_client.send_message("drive_forever", [int(left_speed_entry.get()), int(right_speed_entry.get())])
+    mqtt_client.send_message("drive_forever", [int(left_speed_entry), int(right_speed_entry)])
 
 def handle_right(mqtt_client, left_speed, right_speed):
     print('right')
