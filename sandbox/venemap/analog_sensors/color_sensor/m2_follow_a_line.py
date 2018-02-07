@@ -43,12 +43,13 @@ def main():
             #   self.color_sensor = ev3.ColorSensor()
             #   assert self.color_sensor
             # Then here you can use a command like robot.color_sensor.reflected_light_intensity
+            white_level = robot.color_sensor.reflected_light_intensity
 
             print("New white level is {}.".format(white_level))
         elif command_to_run == 'b':
             print("Calibrate the black light level")
             # TODO: 3. Read the reflected_light_intensity property of the color sensor and set black_level
-
+            black_level = robot.color_sensor.reflected_light_intensity
             print("New black level is {}.".format(black_level))
         elif command_to_run == 'f':
             print("Follow the line until the touch sensor is pressed.")

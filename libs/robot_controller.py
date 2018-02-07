@@ -26,12 +26,11 @@ class Snatch3r(object):
         self.touch_sensor = ev3.TouchSensor()
         self.LED = ev3.Leds
         self.color_sensor = ev3.ColorSensor()
+        self.running = False
         assert self.color_sensor
         assert self.left_motor
         assert self.right_motor
         assert self.arm_motor
-        self.color_sensor = ev3.ColorSensor()
-        assert self.color_sensor
 
     def drive_inches(self, inches_to_target, speed_deg):
         """ Takes in inches needed for travel and speed at which to travel and makes robot move that distance at that speed.
@@ -98,8 +97,6 @@ class Snatch3r(object):
         self.arm_motor.run_to_rel_pos(position_sp=-rev_to_position)
         self.arm_motor.wait_while(ev3.Motor.STATE_RUNNING)
         ev3.Sound.beep().wait()
-
-
 
     def shutdown(self):
         """ Shuts the robot down
