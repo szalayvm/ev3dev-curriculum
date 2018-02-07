@@ -105,9 +105,9 @@ class Snatch3r(object):
         self.right_motor.stop()
         self.LED.set_color(self.LED.LEFT, self.LED.GREEN)
         self.LED.set_color(self.LED.RIGHT, self.LED.GREEN)
-        # print('goodbye')
-        # ev3.Sound.speak('Goodbye').wait()
-        # self.running = False
+        print('goodbye')
+        ev3.Sound.speak('Goodbye').wait()
+        self.running = False
 
     def drive_forever(self, left_speed, right_speed):
         self.left_motor.run_forever(speed_sp=left_speed)
