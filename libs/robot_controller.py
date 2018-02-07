@@ -30,6 +30,8 @@ class Snatch3r(object):
         assert self.left_motor
         assert self.right_motor
         assert self.arm_motor
+        self.color_sensor = ev3.ColorSensor()
+        assert self.color_sensor
 
     def drive_inches(self, inches_to_target, speed_deg):
         """ Takes in inches needed for travel and speed at which to travel and makes robot move that distance at that speed.
