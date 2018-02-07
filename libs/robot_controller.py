@@ -25,6 +25,9 @@ class Snatch3r(object):
         self.MAX_SPEED = 900
         self.touch_sensor = ev3.TouchSensor()
         self.LED = ev3.Leds
+        self.color_sensor = ev3.ColorSensor()
+        self.running = False
+        assert self.color_sensor
         assert self.left_motor
         assert self.right_motor
         assert self.arm_motor
@@ -95,8 +98,6 @@ class Snatch3r(object):
         self.arm_motor.wait_while(ev3.Motor.STATE_RUNNING)
         ev3.Sound.beep().wait()
 
-
-
     def shutdown(self):
         """ Shuts the robot down
          Input: None
@@ -108,7 +109,11 @@ class Snatch3r(object):
         print('goodbye')
         ev3.Sound.speak('Goodbye').wait()
         self.running = False
+
     def drive_forever(self, left_speed, right_speed):
+        """ Makes the robot drive forever with a specific speed
+         Input: left_speed and right_speed
+         Output: None """
         self.left_motor.run_forever(speed_sp=left_speed)
         self.right_motor.run_forever(speed_sp=right_speed)
 
@@ -120,3 +125,10 @@ class Snatch3r(object):
         self.running = True
         while self.running:
             time.sleep(0.1)  # Do nothing (except receive MQTT messages) until an MQTT message calls shutdown.
+
+    def stop_motors(self):
+        """ Stops all wheel motor movement
+         Input: None
+         Output: None """
+        self.left_motor.stop()
+        self.right_motor.stop()
