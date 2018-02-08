@@ -28,10 +28,10 @@ class Snatch3r(object):
         self.color_sensor = ev3.ColorSensor()
         self.ir_sensor = ev3.InfraredSensor()
         self.running = False
-        assert self.color_sensor
-        assert self.left_motor
-        assert self.right_motor
-        assert self.arm_motor
+        assert self.color_sensor.connected
+        assert self.left_motor.connected
+        assert self.right_motor.connected
+        assert self.arm_motor.connected
 
     def drive_inches(self, inches_to_target, speed_deg):
         """ Takes in inches needed for travel and speed at which to travel and makes robot move that distance at that speed.
@@ -134,3 +134,11 @@ class Snatch3r(object):
          Output: None """
         self.left_motor.stop()
         self.right_motor.stop()
+    def move_and_sense(self, left_speed, right_speed):
+        if self.color_sensor.reflected_light_intensity <= ev3.ColorSensor.COLOR_BLACK + 3:
+            print('blk')
+        else:
+            print('wht')
+        self.left_motor.run_forever(left_speed)
+        self.right_motor.run_forever(right_speed)
+        return self.color_sensor.reflected_light_intensity
