@@ -118,6 +118,7 @@ class Snatch3r(object):
         self.left_motor.run_forever(speed_sp=left_speed)
         self.right_motor.run_forever(speed_sp=right_speed)
 
+
     def loop_forever(self):
         # This is a convenience method that I don't really recommend for most programs other than m5.
         #   This method is only useful if the only input to the robot is coming via mqtt.
