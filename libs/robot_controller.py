@@ -133,3 +133,7 @@ class Snatch3r(object):
          Output: None """
         self.left_motor.stop()
         self.right_motor.stop()
+    def move_and_sense(self, left_speed, right_speed):
+        self.left_motor.run_forever(left_speed)
+        self.right_motor.run_forever(right_speed)
+        return self.color_sensor.reflected_light_intensity
