@@ -77,7 +77,6 @@ def main():
     e_button = ttk.Button(main_frame, text="Exit on EV3 too")
     e_button.grid(row=4, column=1)
     e_button['command'] = lambda: quit_program(mqtt_client, True)
-===
     root.mainloop()
 
 
