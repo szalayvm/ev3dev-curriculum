@@ -36,7 +36,10 @@ def main():
         #   assert self.pixy
         # Then here you can use a command like width = robot.pixy.value(3)
 
-
+        print("value1: X", robot.pixy.value(1))
+        print("value2: Y", robot.pixy.value(2))
+        print("value3: Width", robot.pixy.value(3))
+        print("value4: Height", robot.pixy.value(4))
 
         time.sleep(0.1)
 
