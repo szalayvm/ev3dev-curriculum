@@ -15,7 +15,6 @@ Authors: David Fisher and Jaclyn Setina.
 
 import ev3dev.ev3 as ev3
 import time
-
 import robot_controller as robo
 
 
@@ -23,10 +22,11 @@ def main():
     print("--------------------------------------------")
     print(" Beep at blue")
     print("--------------------------------------------")
-    ev3.Sound.speak("Beep at blue").wait()
+    #ev3.Sound.speak("Beep at blue").wait()
     print("Press the touch sensor to exit this program.")
 
     robot = robo.Snatch3r()
+    # pixy = ev3.Sensor(driver_name="pixy-lego") - Already in robot controller
     robot.pixy.mode = "SIG1"
 
     while not robot.touch_sensor.is_pressed:
@@ -41,10 +41,12 @@ def main():
         print("value3: Width", robot.pixy.value(3))
         print("value4: Height", robot.pixy.value(4))
 
-        time.sleep(0.1)
+        if robot.pixy.value(3) > 0:
+            ev3.Sound.beep().wait()
+        time.sleep(1)
 
     print("Goodbye!")
-    ev3.Sound.speak("Goodbye").wait()
+    #ev3.Sound.speak("Goodbye").wait()
 
 # TODO: 3. Call over a TA or instructor to sign your team's checkoff sheet.
 #
