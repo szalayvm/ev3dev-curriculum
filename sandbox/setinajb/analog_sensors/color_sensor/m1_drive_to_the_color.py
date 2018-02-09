@@ -86,25 +86,26 @@ def drive_to_color(button_state, robot, color_to_seek):
       :type color_to_seek: int
     """
     if button_state:
-        ev3.Sound.speak("Seeking " + COLOR_NAMES[color_to_seek]).wait()
-        print(robot.color_sensor.color)
-        # TODO: 3. Implement the task as stated in this module's initial comment block
-        # It is recommended that you add to your Snatch3r class's constructor the color_sensor, as shown
-        #   self.color_sensor = ev3.ColorSensor()
-        #   assert self.color_sensor
-        # Then here you can use a command like robot.color_sensor.color to check the value
+        while True:
+            # ev3.Sound.speak("Seeking " + COLOR_NAMES[color_to_seek]).wait()
+            print(robot.color_sensor.color)
+            # TODO: 3. Implement the task as stated in this module's initial comment block
+            # It is recommended that you add to your Snatch3r class's constructor the color_sensor, as shown
+            #   self.color_sensor = ev3.ColorSensor()
+            #   assert self.color_sensor
+            # Then here you can use a command like robot.color_sensor.color to check the value
 
-        robot.drive_forever(300, 300)
-        if robot.color_sensor.color == color_to_seek:
-            robot.stop_motors()
-            time.sleep(10)
+            robot.drive_forever(300, 300)
+            if robot.color_sensor.color == color_to_seek:
+                robot.stop_motors()
+                break
 
-            # TODO: 4. Call over a TA or instructor to sign your team's checkoff sheet.
-        #
-        # Observations you should make, the instance variable robot.color_sensor.color is always updating
-        # to the color seen and that value is given to you as an int.
+                # TODO: 4. Call over a TA or instructor to sign your team's checkoff sheet.
+            #
+            # Observations you should make, the instance variable robot.color_sensor.color is always updating
+            # to the color seen and that value is given to you as an int.
 
-        ev3.Sound.speak("Found " + COLOR_NAMES[color_to_seek]).wait()
+            # ev3.Sound.speak("Found " + COLOR_NAMES[color_to_seek]).wait()
 
 
 def handle_shutdown(button_state, dc):
