@@ -27,11 +27,13 @@ class Snatch3r(object):
         self.LED = ev3.Leds
         self.color_sensor = ev3.ColorSensor()
         self.ir_sensor = ev3.InfraredSensor()
+        self.pixy = ev3.Sensor(driver_name="pixy-lego")
         self.running = False
         assert self.color_sensor.connected
         assert self.left_motor.connected
         assert self.right_motor.connected
         assert self.arm_motor.connected
+        assert self.pixy
 
     def drive_inches(self, inches_to_target, speed_deg):
         """ Takes in inches needed for travel and speed at which to travel and makes robot move that distance at that speed.
