@@ -118,6 +118,7 @@ class Snatch3r(object):
         self.left_motor.run_forever(speed_sp=left_speed)
         self.right_motor.run_forever(speed_sp=right_speed)
 
+
     def loop_forever(self):
         # This is a convenience method that I don't really recommend for most programs other than m5.
         #   This method is only useful if the only input to the robot is coming via mqtt.
@@ -134,6 +135,10 @@ class Snatch3r(object):
         self.left_motor.stop()
         self.right_motor.stop()
     def move_and_sense(self, left_speed, right_speed):
+        if self.color_sensor.reflected_light_intensity <= ev3.ColorSensor.COLOR_BLACK + 3:
+            print('blk')
+        else:
+            print('wht')
         self.left_motor.run_forever(left_speed)
         self.right_motor.run_forever(right_speed)
         return self.color_sensor.reflected_light_intensity
