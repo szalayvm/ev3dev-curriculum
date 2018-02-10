@@ -30,6 +30,7 @@ def main():
     try:
         while True:
             seek_beacon(robot)
+            robot.stop_motors()
 
             # TODO: 5. Save the result of the seek_beacon function (a bool), then use that value to only say "Found the
             # beacon" if the return value is True.  (i.e. don't say "Found the beacon" if the attempts was cancelled.)
@@ -95,18 +96,17 @@ def seek_beacon(robot):
             if math.fabs(current_heading) < 2:
                 # Close enough of a heading to move forward
                 print("On the right heading. Distance: ", current_distance)
-                if current_distance == 4:
+                if current_distance == 1:
                     print("You have found the beaker!")
                     return True
-                if current_distance > 4:
+                if current_distance > 1:
                     robot.drive_forever(forward_speed,forward_speed)
-            if 2 > math.fabs(current_heading) > 10:
+            if 2 < math.fabs(current_heading) and math.fabs(current_heading) < 10:
                 print("Adjusting heading:",current_heading)
-                robot.drive_forever(-1*forward_speed,forward_speed)
                 if current_heading < 0:
-                    robot.drive_forever(turn_speed,-1*turn_speed)
-                if current_heading > 0:
                     robot.drive_forever(-1*turn_speed,turn_speed)
+                if current_heading > 0:
+                    robot.drive_forever(turn_speed,-1*turn_speed)
             if math.fabs(current_heading) > 10:
                 print("Heading is too far off to fix",current_heading)
                 robot.drive_forever(0,0)
