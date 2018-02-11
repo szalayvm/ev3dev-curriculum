@@ -30,7 +30,6 @@ def main():
     try:
         while True:
             seek_beacon(robot)
-            robot.stop_motors()
 
             # TODO: 5. Save the result of the seek_beacon function (a bool), then use that value to only say "Found the
             # beacon" if the return value is True.  (i.e. don't say "Found the beacon" if the attempts was cancelled.)
@@ -74,7 +73,7 @@ def seek_beacon(robot):
         if current_distance == -128:
             # If the IR Remote is not found just sit idle for this program until it is moved.
             print("IR Remote not found. Distance is -128")
-            robot.stop()
+            robot.drive_forever(-1*turn_speed,turn_speed)
         else:
             # TODO: 4. Implement the following strategy to find the beacon.
             # If the absolute value of the current_heading is less than 2, you are on the right heading.
@@ -98,6 +97,7 @@ def seek_beacon(robot):
                 print("On the right heading. Distance: ", current_distance)
                 if current_distance == 1:
                     robot.drive_inches(2,300)
+                    robot.stop_motors()
                     print("You have found the beaker!")
                     return True
                 if current_distance > 1:
@@ -110,7 +110,7 @@ def seek_beacon(robot):
                     robot.drive_forever(turn_speed,-1*turn_speed)
             if math.fabs(current_heading) > 10:
                 print("Heading is too far off to fix",current_heading)
-                robot.drive_forever(0,0)
+                robot.drive_forever(-1*turn_speed,turn_speed)
 
                 # You add more!
 
