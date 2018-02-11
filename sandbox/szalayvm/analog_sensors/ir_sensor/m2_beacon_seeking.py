@@ -97,6 +97,7 @@ def seek_beacon(robot):
                 # Close enough of a heading to move forward
                 print("On the right heading. Distance: ", current_distance)
                 if current_distance == 1:
+                    robot.drive_inches(2,300)
                     print("You have found the beaker!")
                     return True
                 if current_distance > 1:
