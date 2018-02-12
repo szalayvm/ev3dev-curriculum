@@ -170,7 +170,7 @@ class Snatch3r(object):
                     # Close enough of a heading to move forward
                     print("On the right heading. Distance: ", current_distance)
                     if current_distance == 1:
-                        robot.drive_inches(3, 300)
+                        robot.drive_inches(4, 300)
                         robot.stop_motors()
                         print("You have found the beaker!")
                         return True
