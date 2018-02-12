@@ -80,14 +80,14 @@ def follow_the_line(robot, white_level, black_level):
     # Optional extra - For a harder challenge could you drive on the black line and handle left or right turns?
     # print(robot.color_sensor.reflected_light_intensity)
     while True:
-        print('looping')
-        # robot.move_and_sense(200, 200)
-        if ev3.TouchSensor.is_pressed:
+        # print(robot.color_sensor.reflected_light_intensity)
+        if robot.color_sensor.reflected_light_intensity <= ev3.ColorSensor.COLOR_BLACK + 3:
+            robot.drive_forever(200,200)
+        else:
+            robot.turn_degrees(10, 200)
+        if robot.touch_sensor.is_pressed:
+            ev3.Sound.speak("Done")
             break
-
-    # robot.stop()
-    # ev3.Sound.speak("Done")
-
 
 # TODO: 6. Call over a TA or instructor to sign your team's checkoff sheet and do a code review.
 #
