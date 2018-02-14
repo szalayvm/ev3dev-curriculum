@@ -11,9 +11,7 @@ import random
 import ev3dev.ev3 as ev3
 import time
 import mqtt_remote_method_calls as com
-import robot_controller as robo
 
-robot = robo.Snatch3r()
 
 def main():
     mqtt_client = com.MqttClient()
@@ -32,27 +30,27 @@ def main():
     forward_button = ttk.Button(main_frame, text="Forward")
     forward_button.grid(row=2, column=1)
     forward_button['command'] = lambda: print("Forward button")
+    forward_button['command'] = lambda: handle_forward(mqtt_client, 900, 900)
 
     left_button = ttk.Button(main_frame, text="Left")
     left_button.grid(row=3, column=0)
     left_button['command'] = lambda: print("Left button")
-    root.bind('<Left>', lambda event: print("Left key"))
+    left_button['command'] = lambda: handle_left(mqtt_client, 900, 900)
 
     stop_button = ttk.Button(main_frame, text="Stop")
     stop_button.grid(row=3, column=1)
     stop_button['command'] = lambda: print("Stop button")
-    root.bind('<space>', lambda event: print("Stop key"))
+    stop_button['command'] = lambda: handle_stop(mqtt_client)
 
     right_button = ttk.Button(main_frame, text="Right")
     right_button.grid(row=3, column=2)
     right_button['command'] = lambda: print("Right button")
-    root.bind('<Right>', lambda event: print("Right key"))
+    right_button['command'] = lambda: handle_right(mqtt_client, 900, 900)
 
     back_button = ttk.Button(main_frame, text="Back")
     back_button.grid(row=4, column=1)
     back_button['command'] = lambda: print("Back button")
-    root.bind('<Down>', lambda event: print("Back key"))
-
+    back_button['command'] = lambda: handle_back(mqtt_client, 900, 900)
 
     # Buttons for quit and exit
     q_button = ttk.Button(main_frame, text="Quit")
@@ -63,7 +61,41 @@ def main():
     e_button.grid(row=6, column=2)
     e_button['command'] = lambda: exit()
 
+
     root.mainloop()
+
+# ----------------------------------------------------------------------
+# Tkinter callbacks
+# ----------------------------------------------------------------------
+
+
+def handle_forward(mqtt_client, left_speed, right_speed):
+    mqtt_client.send_message('drive_forever', [900, 900])
+
+
+def handle_left(mqtt_client, left_speed, right_speed):
+    mqtt_client.send_message('drive_forever', [-1*900, 900])
+
+
+def handle_stop(mqtt_client):
+    mqtt_client.send_message('stop_motors')
+
+
+def handle_right(mqtt_client, left_speed, right_speed):
+    mqtt_client.send_message('drive_forever', [900, -1*900])
+
+
+def handle_back(mqtt_client, left_speed, right_speed):
+    mqtt_client.send_message('drive_forever', [-1*900, -1*900])
+
+
+# Quick and exit
+def quit_program(mqtt_client, shutdown_ev3):
+    if shutdown_ev3:
+        print("shutdown")
+        mqtt_client.send_message("shutdown")
+    mqtt_client.close()
+    exit()
 
 
 # ----------------------------------------------------------------------
