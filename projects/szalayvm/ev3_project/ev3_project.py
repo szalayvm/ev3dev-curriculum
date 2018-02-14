@@ -3,20 +3,47 @@
 Contains final project code for CSSE120.
 Author: Victoria Szalay
 """
-import tkinter
-from tkinter import ttk
+import time
+import ev3dev.ev3 as ev3
+import robot_controller as robo
 
+
+
+
+
+robot = robo.Snatch3r
 def main():
-    root = tkinter.Tk()
+    seek()
 
-    frame = ttk.Frame(root,padding=20)
-    frame.grid()
 
-    label = ttk.Label(frame, text='Three Wishes')
-    label.grid()
-
-    root.mainloop()
-
-def first_wish():
+def seek():
     """The robot is to make the wisher famous by posting to twitter."""
+    robot.pixy.mode = "SIG1"
+    drive_speed = 400
+    while not robot.touch_sensor.is_pressed:
+
+        # DONE: 2. Read the Pixy values for x and y
+        # Print the values for x and y
+        x = robot.pixy.value(1)
+        y = robot.pixy.value(2)
+
+        print("value1: X", x)
+        print("value2: Y", y)
+        if x < 150:
+            robot.drive_forever(-drive_speed, drive_speed)
+        elif x > 170:
+            robot.drive_forever(drive_speed, -drive_speed)
+        elif 150 <= x <= 170:
+            robot.stop_motors()
+
+        time.sleep(0.25)
+
+    print("Goodbye!")
+    ev3.Sound.speak("Goodbye").wait()
+
+def hide():
+    """The robot is to find the wisher gold and deliver it to a certain location."""
+
+
+
 main()
