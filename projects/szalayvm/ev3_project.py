@@ -45,7 +45,10 @@ def seek():
 
 def hide():
     """The robot is to find the wisher gold and deliver it to a certain location."""
-
+def return_to_home():
+    """The robot is to return to home base once return base button is pushed on pc"""
+    robot = robo.Snatch3r
+    robot.seek_beacon()
 
 
 main()
