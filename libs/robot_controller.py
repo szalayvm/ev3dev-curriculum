@@ -136,12 +136,13 @@ class Snatch3r(object):
 
         forward_speed = 300
         turn_speed = 100
-        current_heading = 0  # use the beacon_seeker heading
-        current_distance = 0  # use the beacon_seeker distance
 
         while not self.touch_sensor.is_pressed:
             # The touch sensor can be used to abort the attempt (sometimes handy during testing)
-            # Done: 3. Use the beacon_seeker object to get the current heading and distance.\
+
+            # Done: 3. Use the beacon_seeker object to get the current heading and distance.
+            current_heading = 0  # use the beacon_seeker heading
+            current_distance = 0  # use the beacon_seeker distance
             current_heading = beacon_seeker.heading
             current_distance = beacon_seeker.distance
             if current_distance == -128:
@@ -175,7 +176,7 @@ class Snatch3r(object):
 
         # The touch_sensor was pressed to abort the attempt if this code runs.
         print("Abandon ship!")
-        self.robot.stop()
+        robot.stop()
         return False
 
     def loop_forever(self):
