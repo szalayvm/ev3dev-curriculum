@@ -121,7 +121,7 @@ class Snatch3r(object):
         self.left_motor.run_forever(speed_sp=left_speed)
         self.right_motor.run_forever(speed_sp=right_speed)
 
-    def seek_beacon(self, robot):
+    def seek_beacon(self):
         """
         Uses the IR Sensor in BeaconSeeker mode to find the beacon.  If the beacon is found this return True.
         If the beacon is not found and the attempt is cancelled by hitting the touch sensor, return False.
@@ -137,7 +137,7 @@ class Snatch3r(object):
         forward_speed = 300
         turn_speed = 100
 
-        while not robot.touch_sensor.is_pressed:
+        while not self.touch_sensor.is_pressed:
             # The touch sensor can be used to abort the attempt (sometimes handy during testing)
 
             # Done: 3. Use the beacon_seeker object to get the current heading and distance.
@@ -148,27 +148,27 @@ class Snatch3r(object):
             if current_distance == -128:
                 # If the IR Remote is not found just sit idle for this program until it is moved.
                 print("IR Remote not found. Distance is -128")
-                robot.drive_forever(-1 * turn_speed, turn_speed)
+                self.drive_forever(-1 * turn_speed, turn_speed)
             else:
                 if math.fabs(current_heading) < 2:
                     # Close enough of a heading to move forward
                     print("On the right heading. Distance: ", current_distance)
                     if current_distance == 1:
-                        robot.drive_inches(4, 300)
-                        robot.stop_motors()
+                        self.drive_inches(4, 300)
+                        self.stop_motors()
                         print("You have found the beaker!")
                         return True
                     if current_distance > 1:
-                        robot.drive_forever(forward_speed, forward_speed)
+                        self.drive_forever(forward_speed, forward_speed)
                 if 2 < math.fabs(current_heading) < 10:
                     print("Adjusting heading:", current_heading)
                     if current_heading < 0:
-                        robot.drive_forever(-1 * turn_speed, turn_speed)
+                        self.drive_forever(-1 * turn_speed, turn_speed)
                     if current_heading > 0:
-                        robot.drive_forever(turn_speed, -1 * turn_speed)
+                        self.drive_forever(turn_speed, -1 * turn_speed)
                 if math.fabs(current_heading) > 10:
                     print("Heading is too far off to fix", current_heading)
-                    robot.drive_forever(-1 * turn_speed, turn_speed)
+                    self.drive_forever(-1 * turn_speed, turn_speed)
 
                     # You add more!
 

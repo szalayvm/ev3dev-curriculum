@@ -22,7 +22,7 @@ def main():
 
 def seek():
     """The robot is to find the person hiding."""
-    robot = robo.Snatch3r
+    robot = robo.Snatch3r()
     robot.pixy.mode = "SIG1"
     drive_speed = 400
     while not robot.touch_sensor.is_pressed:
@@ -40,6 +40,7 @@ def seek():
             robot.drive_forever(drive_speed, -drive_speed)
         elif 150 <= x <= 170:
             robot.stop_motors()
+            robot.drive_forever(drive_speed,drive_speed)
 
         time.sleep(0.25)
 
