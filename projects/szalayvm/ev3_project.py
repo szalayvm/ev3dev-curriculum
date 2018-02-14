@@ -34,12 +34,13 @@ def seek():
 
         print("value1: X", x)
         print("value2: Y", y)
-        if x < 150:
+        if x < 100:
             robot.drive_forever(-drive_speed, drive_speed)
         elif x > 170:
-            robot.drive_forever(drive_speed, -drive_speed)
-        elif 150 <= x <= 170:
             robot.stop_motors()
+            print("Found fluffball!")
+            return
+        elif 100 <= x <= 170:
             robot.drive_forever(drive_speed,drive_speed)
 
         time.sleep(0.25)
