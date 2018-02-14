@@ -3,26 +3,31 @@
 Contains final project code for CSSE120.
 Author: Victoria Szalay
 """
-import time
-import ev3dev.ev3 as ev3
 import robot_controller as robo
 
+import time
+import ev3dev.ev3 as ev3
 
 
 
 
-robot = robo.Snatch3r
+
+
+
+
+
 def main():
     seek()
 
 
 def seek():
-    """The robot is to make the wisher famous by posting to twitter."""
+    """The robot is to find the person hiding."""
+    robot = robo.Snatch3r
     robot.pixy.mode = "SIG1"
     drive_speed = 400
     while not robot.touch_sensor.is_pressed:
 
-        # DONE: 2. Read the Pixy values for x and y
+        # Read the Pixy values for x and y
         # Print the values for x and y
         x = robot.pixy.value(1)
         y = robot.pixy.value(2)
