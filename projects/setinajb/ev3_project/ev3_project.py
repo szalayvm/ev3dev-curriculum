@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-This module will ...
+This module will drive the ev3 robot using the commands the user specifies on the tkinter window.
 
 Author: Jaclyn Setina."""
 
@@ -8,9 +8,17 @@ import tkinter
 from tkinter import ttk
 from tkinter import *
 import random
+import ev3dev.ev3 as ev3
+import time
+import mqtt_remote_method_calls as com
+import robot_controller as robo
 
+robot = robo.Snatch3r()
 
 def main():
+    mqtt_client = com.MqttClient()
+    mqtt_client.connect_to_ev3()
+
     root = tkinter.Tk()
     root.title("MQTT Remote")
 
@@ -18,14 +26,12 @@ def main():
     main_frame.grid()  # only grid call that does NOT need a row and column
 
     photo = PhotoImage(file="mariokart.png")
-    label = Label(root, image=photo)
-    #label.pack()
+    label = Label(main_frame, image=photo)
     label.grid(row=0, column=1)
 
     forward_button = ttk.Button(main_frame, text="Forward")
     forward_button.grid(row=2, column=1)
     forward_button['command'] = lambda: print("Forward button")
-    root.bind('<Up>', lambda event: print("Forward key"))
 
     left_button = ttk.Button(main_frame, text="Left")
     left_button.grid(row=3, column=0)
