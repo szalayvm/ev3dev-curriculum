@@ -9,13 +9,6 @@ import time
 import ev3dev.ev3 as ev3
 
 
-
-
-
-
-
-
-
 def main():
     seek()
 
@@ -36,13 +29,15 @@ def seek():
         print("value2: Y", y)
         if x < 100:
             robot.drive_forever(-drive_speed, drive_speed)
-        elif x > 170:
+        elif x > 200:
+            robot.drive_forever((drive_speed,-drive_speed))
+            return
+        elif 100 <= x <= 150:
+            robot.drive_forever(drive_speed,drive_speed)
+        elif 150 < x < 200:
             robot.stop_motors()
             print("Found fluffball!")
-            return
-        elif 100 <= x <= 170:
-            robot.drive_forever(drive_speed,drive_speed)
-
+            return True
         time.sleep(0.25)
 
     print("Goodbye!")
@@ -50,7 +45,10 @@ def seek():
 
 def hide():
     """The robot is to find the wisher gold and deliver it to a certain location."""
-
+def return_to_home():
+    """The robot is to return to home base once return base button is pushed on pc"""
+    robot = robo.Snatch3r
+    robot.seek_beacon()
 
 
 main()
