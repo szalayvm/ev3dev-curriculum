@@ -2,10 +2,23 @@ import tkinter
 from tkinter import ttk
 import time
 
+import mqtt_remote_method_calls as com
+
 class time_count(object):
     def __init__(self):
         self.entry_for_countdown = None
         self.label_for_countdown = None
+
+class MyDelegateonThePC(object):
+    """ Helper class that will receive MQTT messages from the EV3. """
+    def __init__(self, label_to_display_messages_in):
+        self.display_label = label_to_display_messages_in
+
+    def received_score(self, res):
+        print("Received: " + res)
+        message_to_display = "score: {}".format(res)
+        self.display_label.configure(text=message_to_display)
+
 
 def main():
    interface()
@@ -36,9 +49,23 @@ def interface():
     label2.grid(row=2, column=4)
     button1 = ttk.Button(frame, text="Human")
     button1.grid(row=3, column=3)
+    button1['command']=lambda: send_function_call(mqtt_client,'hide()',int(entry.get()))
 
     button2 = ttk.Button(frame, text="Robot")
     button2.grid(row=3, column=5)
+    button2['command'] = lambda: send_function_call(mqtt_client,'seek()',int(entry.get()))
+
+    ev3_label = ttk.Label(frame,text='Score_Robot')
+    ev3_label.grid(row=4,column=5)
+
+    ev4_label = ttk.Label(frame,text='Score_Human')
+    ev4_label.grid(row=4,column=3)
+
+
+    pc_delegate = MyDelegateonThePC(ev3_label)
+    #put pc delegate in parathesis below
+    mqtt_client = com.MqttClient(pc_delegate)
+    mqtt_client.connect_to_ev3()
 
     root.mainloop()
 
@@ -56,6 +83,11 @@ def countdown(t):
         num -= 1
     t.label_for_countdown['text'] = "Times up!"
     print("Times up!")
+
+def send_function_call(mqtt_client, function_call,t):
+    print("Sending function = {}".format(function_call))
+    print("Sending time = {}".format(t))
+    mqtt_client.send_message("call_function", [function_call,t])
 
 
 

@@ -31,6 +31,7 @@ Authors: David Fisher and Peter Venema.
 import tkinter
 from tkinter import ttk
 import rosegraphics as rg
+import math
 
 
 # Done: 4. Uncomment the code below.  It imports a library and creates a relatively simple class.
@@ -44,13 +45,24 @@ class MyDelegate(object):
     def __init__(self, canvas):
         self.canvas = canvas
         self.driveLocations = []
-
+        self.driveDirectionVectors = [(0, 1)]
+        self.deltaX = 0
+        self.deltaY = 0
+        self.length = 0
     def on_circle_draw(self, color, x, y):
         self.canvas.create_oval(x - 5, y - 5, x + 5, y + 5, fill=color, width=2)
-        self.driveLocations += [rg.Point(x,y)]
+        self.driveLocations += [rg.Point(x, y)]
         a = self.driveLocations
         if len(self.driveLocations) > 1:
-            self.canvas.create_line(a[len(a)-1].x, a[len(a)-1].y, a[len(a)-2].x, a[len(a)-2].y)
+            self.deltaX = a[len(a) - 1].x - a[len(a) - 2].x
+            self.deltaY = -1 * (a[len(a) - 1].y - a[len(a) - 2].y)
+            self.length = math.sqrt(self.deltaX**2 + self.deltaY**2)
+            print(self.deltaX, self.deltaY)
+            if self.length != 0:
+                self.driveDirectionVectors += [(self.deltaX / self.length, self.deltaY / (self.length))]
+                self.canvas.create_line(a[len(a)-1].x, a[len(a)-1].y, a[len(a)-2].x, a[len(a)-2].y)
+
+
 
 def main():
     root = tkinter.Tk()
@@ -76,11 +88,15 @@ def main():
 
     testButton = ttk.Button(main_frame, text="testArray")
     testButton.grid(row=3,column=1)
-    testButton['command'] = lambda: print(my_delegate.driveLocations)
+    testButton['command'] = lambda: print(my_delegate.driveLocations, my_delegate.driveDirectionVectors)
 
     quit_button = ttk.Button(main_frame, text="Quit")
     quit_button.grid(row=3, column=2)
     quit_button["command"] = lambda: quit_program(mqtt_client)
+
+    beginDrive = ttk.Button(main_frame, text="Drive")
+    beginDrive.grid(row=2, column=3)
+    beginDrive["command"] = lambda: beginDriving(my_delegate.driveLocations, my_delegate.driveDirectionVectors)
 
     # Create an MQTT connection
     # Done: 5. Delete the line below (mqtt_client = None) then uncomment the code below.  It creates a real mqtt client.
@@ -97,7 +113,7 @@ def main():
 # ----------------------------------------------------------------------
 def left_mouse_click(event, mqtt_client):
     """ Draws a circle onto the canvas (one way or another). """
-    print("You clicked location ({},{})".format(event.x, event.y))
+    # print("You clicked location ({},{})".format(event.x, event.y))
 
     # Done: 6. Talk to your team members and have everyone pick a unique color.
     # Examples... "red", "green", "blue", "yellow", "aquamarine", "magenta", "navy", "orange"
@@ -131,6 +147,7 @@ def clear(canvas, myDelegate):
     """Clears the canvas contents"""
     canvas.delete("all")
     myDelegate.driveLocations = []
+    myDelegate.driveDirectionVectors = [(0,1)]
 
 
 def quit_program(mqtt_client):
@@ -139,6 +156,13 @@ def quit_program(mqtt_client):
     if mqtt_client:
         mqtt_client.close()
     exit()
+
+
+def beginDriving(driveLocations, driveVectors):
+    mqtt_client = com.MqttClient()
+    mqtt_client.connect_to_ev3()
+    for k in range(1, len(driveLocations), 1):
+        mqtt_client.send_message("turn_degrees", [50, 400])
 
 
 # ----------------------------------------------------------------------
