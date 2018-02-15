@@ -23,7 +23,7 @@ class MyDelegate(object):
             self.n = seek()
             self.time = int(string_time_selected)
         elif string_function_call == "hide()":
-            self.n = hide()
+            self.n = hide(int(string_time_selected))
             self.time = int(string_time_selected)
 
 
@@ -41,7 +41,7 @@ def main():
 
 
     while my_delegate.running:
-        send_score(mqtt_client,str(score(my_delegate)))
+        #send_score(mqtt_client,str(score(my_delegate)))
         time.sleep(0.01)
 
 
@@ -78,14 +78,18 @@ def seek():
     ev3.Sound.speak("Goodbye").wait()
 
 
-def hide():
+def hide(time_alloted):
     """The robot is to randomly pick a path and follow it until time runs out to hide."""
     start = time.time()
-    robot = robo.Snatch3r
     ev3.Sound.speak("I am hiding.")
-    time.sleep(3)
-    end = time.time()
-    total = end - start
+    total = 0
+
+    while total < time_alloted:
+        print("Pink_distance", find_pink_distance())
+        print("Green_distance", find_green_distance())
+
+        end = time.time()
+        total = end - start
     return total
 
 
@@ -108,6 +112,18 @@ def score(hi):
 def send_score(mqtt_client,score):
     mqtt_client.send_message("received_score", [score])
 
+def find_pink_distance():
+    robot = robo.Snatch3r()
+    robot.pixy.mode = "SIG2"
+    pink_x = robot.pixy.value(1)
+    pink_y = robot.pixy.value(2)
+    return pink_x - pink_y
+def find_green_distance():
+    robot = robo.Snatch3r()
+    robot.pixy.mode = "SIG1"
+    green_x = robot.pixy.value(1)
+    green_y = robot.pixy.value(2)
+    return green_x - green_y
 
 
 main()
