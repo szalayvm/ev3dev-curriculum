@@ -208,9 +208,10 @@ class Snatch3r(object):
         """ takes in a list of pixels to drive to and drives there
         Input: driveLocations(list of rgPoints
         Output: None """
-        for k in range(1, len(driveLocations)):
-            deltaX = driveLocations[k].x-driveLocations[k-1].x
-            deltaY = driveLocations[k].y - driveLocations[k-1].y
+        initialDir = [1,0]
+    #     First, orient in the right direction
+
+
 
     def drive_series_turn_degrees(self, driveLocations):
         None

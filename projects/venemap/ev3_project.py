@@ -31,6 +31,7 @@ Authors: David Fisher and Peter Venema.
 import tkinter
 from tkinter import ttk
 import rosegraphics as rg
+import math
 
 
 # Done: 4. Uncomment the code below.  It imports a library and creates a relatively simple class.
@@ -44,12 +45,20 @@ class MyDelegate(object):
     def __init__(self, canvas):
         self.canvas = canvas
         self.driveLocations = []
-
+        self.driveDirectionVectors = [(0,1)]
+        self.deltaX = 0
+        self.deltaY = 0
+        self.length = 0
     def on_circle_draw(self, color, x, y):
         self.canvas.create_oval(x - 5, y - 5, x + 5, y + 5, fill=color, width=2)
-        self.driveLocations += [rg.Point(x,y)]
+        self.driveLocations += [rg.Point(x, y)]
         a = self.driveLocations
         if len(self.driveLocations) > 1:
+            self.deltaX = a[len(a) - 1].x - a[len(a) - 2].x
+            self.deltaY = -1 * (a[len(a) - 1].y - a[len(a) - 2].y)
+            self.length = math.sqrt(self.deltaX**2 + self.deltaY**2)
+            print(self.deltaX, self.deltaY)
+            self.driveDirectionVectors += [(self.deltaX / self.length, self.deltaY / (self.length))]
             self.canvas.create_line(a[len(a)-1].x, a[len(a)-1].y, a[len(a)-2].x, a[len(a)-2].y)
 
 def main():
@@ -76,7 +85,7 @@ def main():
 
     testButton = ttk.Button(main_frame, text="testArray")
     testButton.grid(row=3,column=1)
-    testButton['command'] = lambda: print(my_delegate.driveLocations)
+    testButton['command'] = lambda: print(my_delegate.driveLocations, my_delegate.driveDirectionVectors)
 
     quit_button = ttk.Button(main_frame, text="Quit")
     quit_button.grid(row=3, column=2)
@@ -97,7 +106,7 @@ def main():
 # ----------------------------------------------------------------------
 def left_mouse_click(event, mqtt_client):
     """ Draws a circle onto the canvas (one way or another). """
-    print("You clicked location ({},{})".format(event.x, event.y))
+    # print("You clicked location ({},{})".format(event.x, event.y))
 
     # Done: 6. Talk to your team members and have everyone pick a unique color.
     # Examples... "red", "green", "blue", "yellow", "aquamarine", "magenta", "navy", "orange"
