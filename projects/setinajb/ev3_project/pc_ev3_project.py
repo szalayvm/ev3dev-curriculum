@@ -19,16 +19,18 @@ class MyDelegateOnThePc(object):
     def __init__(self, score_label, start_points):
         self.display_label = score_label
         self.points = start_points
-        
+
     def change_points(self, diff_points):
         self.points = self.points + diff_points
+        print("Received: ", self.points)
         message_to_display = "{} points.".format(self.points)
-        self.display_label.configure(text=message_to_display)
+        # self.display_label.configure(text=message_to_display)
+        self.display_label["text"] = message_to_display
 
 
 def main():
     mqtt_client = com.MqttClient()
-    # mqtt_client.connect_to_ev3()
+    mqtt_client.connect_to_ev3()
 
     root = tkinter.Tk()
     root.title("MQTT Remote")
@@ -36,10 +38,12 @@ def main():
     main_frame = ttk.Frame(root, padding=50)
     main_frame.grid()  # only grid call that does NOT need a row and column
 
+    # Insert a photo
     photo = PhotoImage(file="mariokart.png")
     label = Label(main_frame, image=photo)
     label.grid(row=0, column=1)
 
+    # Create a score label
     score_label = Label(main_frame, text="0 points")
     score_label.grid(row=5, column=1)
 
