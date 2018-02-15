@@ -203,3 +203,15 @@ class Snatch3r(object):
         self.left_motor.run_forever(left_speed)
         self.right_motor.run_forever(right_speed)
         return self.color_sensor.reflected_light_intensity
+
+    def drive_series(self, driveLocations):
+        """ takes in a list of pixels to drive to and drives there
+        Input: driveLocations(list of rgPoints
+        Output: None """
+        for k in range(1, len(driveLocations)):
+            deltaX = driveLocations[k].x-driveLocations[k-1].x
+            deltaY = driveLocations[k].y - driveLocations[k-1].y
+
+    def drive_series_turn_degrees(self, driveLocations):
+        None
+
