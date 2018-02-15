@@ -13,9 +13,22 @@ import time
 import mqtt_remote_method_calls as com
 
 
+class MyDelegateOnThePc(object):
+    """ Helper class that will receive MQTT messages from the EV3. """
+
+    def __init__(self, score_label, start_points):
+        self.display_label = score_label
+        self.points = start_points
+        
+    def change_points(self, diff_points):
+        self.points = self.points + diff_points
+        message_to_display = "{} points.".format(self.points)
+        self.display_label.configure(text=message_to_display)
+
+
 def main():
     mqtt_client = com.MqttClient()
-    mqtt_client.connect_to_ev3()
+    # mqtt_client.connect_to_ev3()
 
     root = tkinter.Tk()
     root.title("MQTT Remote")
@@ -26,6 +39,9 @@ def main():
     photo = PhotoImage(file="mariokart.png")
     label = Label(main_frame, image=photo)
     label.grid(row=0, column=1)
+
+    score_label = Label(main_frame, text="0 points")
+    score_label.grid(row=5, column=1)
 
     forward_button = ttk.Button(main_frame, text="Forward")
     forward_button.grid(row=2, column=1)
@@ -60,6 +76,11 @@ def main():
     e_button = ttk.Button(main_frame, text="Exit")
     e_button.grid(row=6, column=2)
     e_button['command'] = lambda: exit()
+
+    score_delegate = MyDelegateOnThePc(score_label, 0)
+    mqtt_client = com.MqttClient(score_delegate)
+    mqtt_client.connect_to_ev3()
+
 
 
     root.mainloop()
