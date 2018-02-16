@@ -48,17 +48,36 @@ def main():
 
 def seek(time_alloted):
     """The robot is to find the person hiding."""
-    start = time.time()
     robot = robo.Snatch3r()
-    robot.pixy.mode = "SIG1"
     drive_speed = 400
     total = 0
-    while total < time_alloted:
-        robot.seek_beacon()
-        end = time.time()
-        total = end - start
-        return total
+    #while total < time_alloted:
+        #robot.seek_beacon()
+        #end = time.time()
+        #total = end - start
+        #return total
 
+    robot.pixy.mode = "SIG1"
+    drive_speed = 400
+    turn_speed = 200
+    while not robot.touch_sensor.is_pressed:
+
+        # Read the Pixy values for x and y
+        # Print the values for x and y
+        x = robot.pixy.value(1)
+        y = robot.pixy.value(2)
+
+        print("value1: X", x)
+        print("value2: Y", y)
+        if x < 150:
+            robot.drive_forever(-turn_speed, turn_speed)
+        elif x > 170:
+            robot.drive_forever(turn_speed, -turn_speed)
+        elif 150 <= x <= 170:
+            robot.stop_motors()
+            robot.drive_inches(8, turn_speed)
+
+        time.sleep(0.25)
 
     print("Goodbye!")
     ev3.Sound.speak("Goodbye").wait()
@@ -66,30 +85,24 @@ def seek(time_alloted):
 
 def hide(time_alloted):
     """The robot is to randomly pick a path and follow it until time runs out to hide."""
-    start = time.time()
     ev3.Sound.speak("I am hiding.")
     robot = robo.Snatch3r()
-    drive_speed = 200
-    total = 0
+    turn_speed = 100
+    drive_speed = 300
 
-    while total < time_alloted:
+
+    while not robot.touch_sensor.is_pressed:
         print("Pink_distance", find_pink_distance())
         print("Green_distance", find_green_distance())
-        if find_pink_distance() > 200:
-            robot.turn_degrees(180,drive_speed)
+        if find_green_distance() < 150:
+            robot.drive_forever(-turn_speed, turn_speed)
+        elif find_green_distance() > 170:
+            robot.drive_forever(turn_speed, -turn_speed)
+        elif 150 <= find_green_distance() <= 170:
             robot.drive_forever(drive_speed,drive_speed)
-        if find_green_distance() < 70:
-            robot.drive_forever(-drive_speed, drive_speed)
-        elif find_green_distance() > 200:
-            robot.drive_forever(drive_speed, -drive_speed)
-        elif 70 <= find_green_distance() <= 165:
-            robot.drive_forever(drive_speed, drive_speed)
-        elif 165 < find_green_distance() < 200:
-            robot.stop_motors()
-            ev3.Sound.speak("Hidden")
-            end = time.time()
-            total = end - start
-        return total
+            time.sleep(.3)
+        time.sleep(0.25)
+
 
 
 
@@ -111,6 +124,8 @@ def score(hi):
     elif hi.n <= hi.time:
         score = hi.time/(hi.n+1)
         return score
+    elif hi.n == 0:
+        return 0
 
 def score2(hi):
     if hi.m > hi.time:
@@ -118,6 +133,8 @@ def score2(hi):
     elif hi.m <= hi.time:
         score = hi.time/(hi.m+1)
         return score
+    elif hi.m == 0:
+        return 0
 
 def send_score(mqtt_client,score,score2):
     mqtt_client.send_message("received_score", [score,score2])

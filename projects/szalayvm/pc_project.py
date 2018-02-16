@@ -16,10 +16,10 @@ class MyDelegateonThePC(object):
         self.display_label2 = label2_to_display_messages_in
 
     def received_score(self, res1,res2):
-        print("Received:{}{}".format(res1,res2))
-        message_to_display = "score: {}".format(res1)
+        #print("Received:{}{}".format(res1,res2))
+        message_to_display = "Robot_score: {}".format(res1)
         self.display_label1.configure(text=message_to_display)
-        another = "score:{}".format(res2)
+        another = "Human_score:{}".format(res2)
         self.display_label2.configure(text=another)
 
 
