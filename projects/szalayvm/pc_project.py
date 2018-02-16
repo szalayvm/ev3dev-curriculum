@@ -11,13 +11,18 @@ class time_count(object):
 
 class MyDelegateonThePC(object):
     """ Helper class that will receive MQTT messages from the EV3. """
-    def __init__(self, label_to_display_messages_in):
-        self.display_label = label_to_display_messages_in
+    def __init__(self, label1_to_display_messages_in,label2_to_display_messages_in):
+        self.display_label1 = label1_to_display_messages_in
+        self.display_label2 = label2_to_display_messages_in
 
-    def received_score(self, res):
-        print("Received: " + res)
-        message_to_display = "score: {}".format(res)
-        self.display_label.configure(text=message_to_display)
+    def received_score(self, res1,res2):
+        print("Received:{}{}".format(res1,res2))
+        message_to_display = "score: {}".format(res1)
+        self.display_label1.configure(text=message_to_display)
+        another = "score:{}".format(res2)
+        self.display_label2.configure(text=another)
+
+
 
 
 def main():
@@ -62,7 +67,7 @@ def interface():
     ev4_label.grid(row=4,column=3)
 
 
-    pc_delegate = MyDelegateonThePC(ev3_label)
+    pc_delegate = MyDelegateonThePC(ev3_label,ev4_label)
     #put pc delegate in parathesis below
     mqtt_client = com.MqttClient(pc_delegate)
     mqtt_client.connect_to_ev3()
