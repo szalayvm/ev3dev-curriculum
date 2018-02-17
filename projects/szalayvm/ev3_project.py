@@ -16,16 +16,14 @@ class MyDelegate(object):
         self.running = True
         self.n = 0
         self.m = 0
-        self.time = 0
+        self.count = 0
 
     def call_function(self, string_function_call,string_time_selected):
         print("Received: {}{} ".format(string_function_call,string_time_selected))
         if string_function_call == "seek()":
             self.n = seek(int(string_time_selected))
-            self.time = int(string_time_selected)
         elif string_function_call == "hide()":
             self.m = hide(int(string_time_selected))
-            self.time = int(string_time_selected)
 
 
 def main():
@@ -42,54 +40,22 @@ def main():
 
 
     while my_delegate.running:
-        send_score(mqtt_client,str(score(my_delegate)),str(score2(my_delegate)))
-        time.sleep(0.01)
+        if my_delegate.n > 0:
+            send_score(mqtt_client,str(round(score(my_delegate))),str(score2(my_delegate)))
+            my_delegate.n = 0
+            time.sleep(0.01)
 
 
 def seek(time_alloted):
     start = time.time()
     """The robot is to find the person hiding."""
     robot = robo.Snatch3r()
-    drive_speed = 400
-    total = 0
-    #while total < time_alloted:
-        #robot.seek_beacon()
-        #end = time.time()
-        #total = end - start
-        #return total
-
-    robot.pixy.mode = "SIG1"
-    drive_speed = 400
-    turn_speed = 200
-    while not robot.touch_sensor.is_pressed:
-
-        # Read the Pixy values for x and y
-        # Print the values for x and y
-        x = robot.pixy.value(1)
-        y = robot.pixy.value(2)
-
-        print("value1: X", x)
-
-        if x < 150:
-            robot.drive_forever(-turn_speed, turn_speed)
-        elif x > 170:
-            robot.drive_forever(turn_speed, -turn_speed)
-        elif 150 <= x <= 170:
-            robot.stop_motors()
-            robot.drive_inches(8, turn_speed)
-            if find_green_height() > 160:
-                print("Hiding!")
-                end = time.time()
-                total = end - start
-                return total
-
-        time.sleep(0.25)
-
+    save = robot.seek_beacon()
     end = time.time()
-    print("Goodbye")
-    total = start - end
-    ev3.Sound.speak("You have found me!").wait()
-    return total
+    total = end - start
+    if save == True:
+        return  time_alloted - total
+
 
 
 def hide(time_alloted):
@@ -146,22 +112,11 @@ def return_to_home():
     return total
 
 def score(hi):
-    if hi.n > hi.time:
-        return 0
-    elif hi.n <= hi.time:
-        score = hi.time/(hi.n+1)
-        return score
-    elif hi.n == 0:
-        return 0
+    hi.count = hi.count + hi.n
+    return hi.count
 
 def score2(hi):
-    if hi.m > hi.time:
-        return 0
-    elif hi.m <= hi.time:
-        score = hi.time/(hi.m+1)
-        return score
-    elif hi.m == 0:
-        return 0
+    pass
 
 def send_score(mqtt_client,score,score2):
     mqtt_client.send_message("received_score", [score,score2])
