@@ -32,7 +32,7 @@ def main():
 def interface():
     t = time_count()
     root = tkinter.Tk()
-    root.title = 'Hide&Seek'
+    root.title = 'Tag'
 
     frame = ttk.Frame(root, padding=20)
     frame.grid()
@@ -49,13 +49,13 @@ def interface():
     button3.grid()
     button3['command'] = lambda: countdown(t)
 
-    label5 = ttk.Label(frame, text='Hide&Seek')
+    label5 = ttk.Label(frame, text='Robot Tag')
     label5.grid(row=0, column=2)
     label2 = ttk.Label(frame, text='Whos It?')
     label2.grid(row=2, column=4)
     button1 = ttk.Button(frame, text="Human")
     button1.grid(row=3, column=3)
-    button1['command']=lambda: send_function_call(mqtt_client,'hide()',int(entry.get()))
+    button1['command']=lambda: send_function_call(mqtt_client,'run()',int(entry.get()))
 
     button2 = ttk.Button(frame, text="Robot")
     button2.grid(row=3, column=5)

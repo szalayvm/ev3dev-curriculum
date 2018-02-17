@@ -17,21 +17,22 @@ class MyDelegate(object):
         self.n = 0
         self.m = 0
         self.count = 0
+        self.count2 = 0
 
     def call_function(self, string_function_call,string_time_selected):
         print("Received: {}{} ".format(string_function_call,string_time_selected))
         if string_function_call == "seek()":
             self.n = seek(int(string_time_selected))
-        elif string_function_call == "hide()":
-            self.m = hide(int(string_time_selected))
+        elif string_function_call == "run()":
+            self.m = run(int(string_time_selected))
 
 
 def main():
     print("--------------------------------------------")
-    print(" Hide and Go Seek")
+    print(" Robot Tag")
     print(" Press Back to exit when done.")
     print("--------------------------------------------")
-    ev3.Sound.speak("LED Button communication").wait()
+    ev3.Sound.speak("Robot").wait()
 
     my_delegate = MyDelegate()
     mqtt_client = com.MqttClient(my_delegate)
@@ -41,8 +42,12 @@ def main():
 
     while my_delegate.running:
         if my_delegate.n > 0:
-            send_score(mqtt_client,str(round(score(my_delegate))),str(score2(my_delegate)))
+            send_score(mqtt_client,str(round(score(my_delegate))),str(round(score2(my_delegate))))
             my_delegate.n = 0
+            time.sleep(0.01)
+        if my_delegate.m >0:
+            send_score(mqtt_client,str(round(score(my_delegate))),str(round(score2(my_delegate))))
+            my_delegate.m = 0
             time.sleep(0.01)
 
 
@@ -54,21 +59,23 @@ def seek(time_alloted):
     end = time.time()
     total = end - start
     if save == True:
+        ev3.Sound.speak("I will catch you!")
         return  time_alloted - total
 
 
 
-def hide(time_alloted):
+def run(time_alloted):
     """The robot is to randomly pick a path and follow it until time runs out to hide."""
-    ev3.Sound.speak("I am hiding.")
+    ev3.Sound.speak("I am looking for base!")
     robot = robo.Snatch3r()
     turn_speed = 100
     drive_speed = 300
     start = time.time()
+    x= 3
+    while x == 3:
+        print("Pink Height",find_pink_height())
+        print("Green Height",find_green_height())
 
-    while not robot.touch_sensor.is_pressed:
-        print("Pink_distance", find_pink_distance())
-        print("Green_height", find_green_height())
         if find_pink_height() > 15:
             print("Pink height:", find_pink_height())
             robot.stop_motors()
@@ -76,25 +83,28 @@ def hide(time_alloted):
             robot.drive_forever(600, 600)
             time.sleep(.5)
             print("Pink!")
-        else:
-            if find_green_height() > 0:
-                #robot.drive_inches(3,drive_speed)
-                robot.drive_forever(drive_speed,drive_speed)
-                if find_green_height()>15:
-                    robot.stop_motors()
-                    time.sleep(.1)
-                    ev3.Sound.speak("Hidden")
-                    return 4
-            elif find_green_height()==0:
-                robot.drive_forever(turn_speed,-turn_speed)
-            time.sleep(.25)
-        end = time.time()
-        total = end - start
-        if robot.touch_sensor.is_pressed:
-            ev3.Sound.speak("I am caught")
+            ev3.Sound.speak("You cant catch me!")
+        elif robot.touch_sensor.is_pressed:
             robot.stop_motors()
-            return total
-        time.sleep(0.25)
+            end = time.time()
+            total = end - start
+            ev3.Sound.speak("I am caught")
+            return time_alloted - total
+
+        elif find_green_height() > 0:
+            #robot.drive_inches(3,drive_speed)
+            robot.drive_forever(drive_speed,drive_speed)
+            if find_green_height()>150:
+                robot.stop_motors()
+                ev3.Sound.speak(("I am on base!"))
+                return 1
+        elif find_green_height() == 0:
+            robot.drive_forever(turn_speed,-turn_speed)
+        time.sleep(.01)
+    ev3.Sound.speak("Out of time")
+    return 0
+
+
 
 
 
@@ -116,7 +126,8 @@ def score(hi):
     return hi.count
 
 def score2(hi):
-    pass
+    hi.count2 = hi.count2 + hi.m
+    return hi.count2
 
 def send_score(mqtt_client,score,score2):
     mqtt_client.send_message("received_score", [score,score2])
