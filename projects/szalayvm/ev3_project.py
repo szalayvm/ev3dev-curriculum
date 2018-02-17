@@ -47,6 +47,7 @@ def main():
 
 
 def seek(time_alloted):
+    start = time.time()
     """The robot is to find the person hiding."""
     robot = robo.Snatch3r()
     drive_speed = 400
@@ -68,7 +69,7 @@ def seek(time_alloted):
         y = robot.pixy.value(2)
 
         print("value1: X", x)
-        print("value2: Y", y)
+
         if x < 150:
             robot.drive_forever(-turn_speed, turn_speed)
         elif x > 170:
@@ -76,11 +77,19 @@ def seek(time_alloted):
         elif 150 <= x <= 170:
             robot.stop_motors()
             robot.drive_inches(8, turn_speed)
+            if find_green_height() > 160:
+                print("Hiding!")
+                end = time.time()
+                total = end - start
+                return total
 
         time.sleep(0.25)
 
-    print("Goodbye!")
-    ev3.Sound.speak("Goodbye").wait()
+    end = time.time()
+    print("Goodbye")
+    total = start - end
+    ev3.Sound.speak("You have found me!").wait()
+    return total
 
 
 def hide(time_alloted):
@@ -94,13 +103,23 @@ def hide(time_alloted):
     while not robot.touch_sensor.is_pressed:
         print("Pink_distance", find_pink_distance())
         print("Green_distance", find_green_distance())
-        if find_green_distance() < 150:
-            robot.drive_forever(-turn_speed, turn_speed)
-        elif find_green_distance() > 170:
-            robot.drive_forever(turn_speed, -turn_speed)
-        elif 150 <= find_green_distance() <= 170:
-            robot.drive_forever(drive_speed,drive_speed)
-            time.sleep(.3)
+        if find_pink_height() > 15:
+            print("Pink height:", find_pink_height())
+            robot.stop_motors()
+            robot.turn_degrees(180, 400)
+            robot.drive_forever(600, 600)
+            time.sleep(2)
+            print("Pink!")
+        else:
+            if find_green_height() > 0:
+                #robot.drive_inches(3,drive_speed)
+                robot.drive_forever(drive_speed,drive_speed)
+                if find_green_height()>160:
+                    ev3.Sound.speak("Hidden")
+                    return 4
+            elif find_green_height()==0:
+                robot.drive_forever(turn_speed,-turn_speed)
+            time.sleep(.25)
         time.sleep(0.25)
 
 
@@ -145,6 +164,13 @@ def find_pink_distance():
     pink_x = robot.pixy.value(1)
     pink_y = robot.pixy.value(2)
     return pink_x
+
+def find_pink_height():
+    robot = robo.Snatch3r()
+    robot.pixy.mode = "SIG2"
+    pink_height = robot.pixy.value(4)
+    pink_y = robot.pixy.value(2)
+    return pink_height
 
 
 def find_green_distance():
