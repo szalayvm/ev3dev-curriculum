@@ -98,28 +98,36 @@ def hide(time_alloted):
     robot = robo.Snatch3r()
     turn_speed = 100
     drive_speed = 300
-
+    start = time.time()
 
     while not robot.touch_sensor.is_pressed:
         print("Pink_distance", find_pink_distance())
-        print("Green_distance", find_green_distance())
+        print("Green_height", find_green_height())
         if find_pink_height() > 15:
             print("Pink height:", find_pink_height())
             robot.stop_motors()
             robot.turn_degrees(180, 400)
             robot.drive_forever(600, 600)
-            time.sleep(2)
+            time.sleep(.5)
             print("Pink!")
         else:
             if find_green_height() > 0:
                 #robot.drive_inches(3,drive_speed)
                 robot.drive_forever(drive_speed,drive_speed)
-                if find_green_height()>160:
+                if find_green_height()>15:
+                    robot.stop_motors()
+                    time.sleep(.1)
                     ev3.Sound.speak("Hidden")
                     return 4
             elif find_green_height()==0:
                 robot.drive_forever(turn_speed,-turn_speed)
             time.sleep(.25)
+        end = time.time()
+        total = end - start
+        if robot.touch_sensor.is_pressed:
+            ev3.Sound.speak("I am caught")
+            robot.stop_motors()
+            return total
         time.sleep(0.25)
 
 
