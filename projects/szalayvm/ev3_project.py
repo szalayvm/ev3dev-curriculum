@@ -41,14 +41,12 @@ def main():
 
 
     while my_delegate.running:
-        if my_delegate.n > 0:
+        if my_delegate.n > 0 or my_delegate.m > 0:
             send_score(mqtt_client,str(round(score(my_delegate))),str(round(score2(my_delegate))))
             my_delegate.n = 0
-            time.sleep(0.01)
-        if my_delegate.m >0:
-            send_score(mqtt_client,str(round(score(my_delegate))),str(round(score2(my_delegate))))
             my_delegate.m = 0
             time.sleep(0.01)
+
 
 
 def seek(time_alloted):
@@ -57,9 +55,10 @@ def seek(time_alloted):
     robot = robo.Snatch3r()
     save = robot.seek_beacon()
     end = time.time()
+    ev3.Sound.speak("I will catch you")
     total = end - start
     if save == True:
-        ev3.Sound.speak("I will catch you!")
+        ev3.Sound.speak("I caught you!")
         return  time_alloted - total
 
 
