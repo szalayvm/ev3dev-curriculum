@@ -168,7 +168,8 @@ def beginDriving(mqtt_client, driveLocations, driveVectors, lengths):
     for k in range(1, len(driveLocations), 1):
         turn_amount = math.acos(driveVectors[k-1][0] * driveVectors[k][0] + driveVectors[k-1][1] * driveVectors[k][1])*180/math.pi
         if driveLocations[k].x > driveLocations[k-1].x:
-            turn_amount *= -1
+            print('hi')
+            turn_amount = -turn_amount
         print('turn amt', turn_amount)
         mqtt_client.send_message("turn_degrees", [turn_amount, 400])
         # mqtt_client.send_message("drive_inches", [10, 400])
