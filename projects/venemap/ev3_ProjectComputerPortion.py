@@ -32,7 +32,7 @@ import tkinter
 from tkinter import ttk
 import rosegraphics as rg
 import math
-# import time
+import time
 
 
 # Done: 4. Uncomment the code below.  It imports a library and creates a relatively simple class.
@@ -167,12 +167,12 @@ def quit_program(mqtt_client):
 def beginDriving(mqtt_client, driveLocations, driveVectors, lengths):
     for k in range(1, len(driveLocations), 1):
         turn_amount = math.acos(driveVectors[k-1][0] * driveVectors[k][0] + driveVectors[k-1][1] * driveVectors[k][1])*180/math.pi
-        if driveLocations[k].x > driveLocations[k-1].x:
-            print('hi')
+        if driveVectors[k][0] > 0:
             turn_amount = -turn_amount
         print('turn amt', turn_amount)
         mqtt_client.send_message("turn_degrees", [turn_amount, 400])
-        # mqtt_client.send_message("drive_inches", [10, 400])
+        time.sleep(3)
+        # mqtt_client.send_message("drive_inches", [5, 400])
 
 
 
