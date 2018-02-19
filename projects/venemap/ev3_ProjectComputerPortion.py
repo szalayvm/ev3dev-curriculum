@@ -32,6 +32,7 @@ import tkinter
 from tkinter import ttk
 import rosegraphics as rg
 import math
+import time
 
 
 # Done: 4. Uncomment the code below.  It imports a library and creates a relatively simple class.
@@ -49,6 +50,7 @@ class MyDelegate(object):
         self.deltaX = 0
         self.deltaY = 0
         self.length = 0
+        self.lengths = []
     def on_circle_draw(self, color, x, y):
         self.canvas.create_oval(x - 5, y - 5, x + 5, y + 5, fill=color, width=2)
         self.driveLocations += [rg.Point(x, y)]
@@ -61,6 +63,8 @@ class MyDelegate(object):
             if self.length != 0:
                 self.driveDirectionVectors += [(self.deltaX / self.length, self.deltaY / (self.length))]
                 self.canvas.create_line(a[len(a)-1].x, a[len(a)-1].y, a[len(a)-2].x, a[len(a)-2].y)
+                self.lengths += [self.length]
+
 
 
 
@@ -79,7 +83,7 @@ def main():
     canvas = tkinter.Canvas(main_frame, background="lightgray", width=400, height=300)
     canvas.grid(columnspan=2)
     # Make callbacks for mouse click events.
-    canvas.bind("<Button-1>", lambda event: left_mouse_click(event, mqtt_client))
+    canvas.bind("<Button-1>", lambda event: left_mouse_click(event, my_delegate))
 
     # Make callbacks for the two buttons.
     clear_button = ttk.Button(main_frame, text="Clear")
@@ -96,13 +100,13 @@ def main():
 
     beginDrive = ttk.Button(main_frame, text="Drive")
     beginDrive.grid(row=2, column=3)
-    beginDrive["command"] = lambda: beginDriving(my_delegate.driveLocations, my_delegate.driveDirectionVectors)
+    beginDrive["command"] = lambda: beginDriving(mqtt_client, my_delegate.driveLocations, my_delegate.driveDirectionVectors, my_delegate.lengths)
 
     # Create an MQTT connection
     # Done: 5. Delete the line below (mqtt_client = None) then uncomment the code below.  It creates a real mqtt client.
     my_delegate = MyDelegate(canvas)
-    mqtt_client = com.MqttClient(my_delegate)
-    mqtt_client.connect("draw", "draw")
+    mqtt_client = com.MqttClient()
+    mqtt_client.connect_to_ev3()
 
     root.mainloop()
 
@@ -111,7 +115,7 @@ def main():
 # Tkinter event handlers
 # Left mouse click
 # ----------------------------------------------------------------------
-def left_mouse_click(event, mqtt_client):
+def left_mouse_click(event, myDelegate):
     """ Draws a circle onto the canvas (one way or another). """
     # print("You clicked location ({},{})".format(event.x, event.y))
 
@@ -125,6 +129,7 @@ def left_mouse_click(event, mqtt_client):
     # canvas.create_oval(event.x - 10, event.y - 10,
     #                    event.x + 10, event.y + 10,
     #                    fill=my_color, width=3)
+    myDelegate.on_circle_draw(my_color, event.x, event.y)
     # Repeated: If you uncommented the code above to test it, make sure to comment it back out before todo7 below.
 
     # MQTT draw
@@ -135,7 +140,8 @@ def left_mouse_click(event, mqtt_client):
     # Review the lecture notes about the two parameters passed into the mqtt_client.send_message method if needed
     # All of your teammates should receive the message and create a circle of your color at your click location.
     # Additionally you will receive your own message and draw a circle in your color too.
-    mqtt_client.send_message("on_circle_draw", [my_color, event.x, event.y])
+    # mqtt_client.send_message("on_circle_draw", [my_color, event.x, event.y])
+
 
 
 
@@ -158,11 +164,16 @@ def quit_program(mqtt_client):
     exit()
 
 
-def beginDriving(driveLocations, driveVectors):
-    mqtt_client = com.MqttClient()
-    mqtt_client.connect_to_ev3()
+def beginDriving(mqtt_client, driveLocations, driveVectors, lengths):
     for k in range(1, len(driveLocations), 1):
-        mqtt_client.send_message("turn_degrees", [50, 400])
+        turn_amount = math.acos(driveVectors[k-1][0] * driveVectors[k][0] + driveVectors[k-1][1] * driveVectors[k][1])*180/math.pi
+        if driveVectors[k][0] > 0:
+            turn_amount = -turn_amount
+        print('turn amt', turn_amount)
+        mqtt_client.send_message("turn_degrees", [turn_amount, 400])
+        time.sleep(3)
+        # mqtt_client.send_message("drive_inches", [5, 400])
+
 
 
 # ----------------------------------------------------------------------
