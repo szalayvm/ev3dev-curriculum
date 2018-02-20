@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+""""
+This project demonstrates a robot that is capable of playing a modified version of "tag" with a human.
+This file contains the code that is ran on the computer which allows the human to communicate with the robot
+and vice-versa.
+
+Author: Victoria Szalay
+"""
 import tkinter
 from tkinter import ttk
 import time
@@ -5,6 +13,7 @@ import mqtt_remote_method_calls as com
 
 
 class TimeCount(object):
+    """Helper class that stores information from tkinter box to use in separate function"""
     def __init__(self):
         self.entry_for_countdown = None
         self.label_for_countdown = None
@@ -18,7 +27,6 @@ class MyDelegateonThePC(object):
         self.display_label2 = label2_to_display_messages_in
 
     def received_score(self, res1, res2):
-        # print("Received:{}{}".format(res1,res2))
         message_to_display = "Robot_score: {}".format(res1)
         self.display_label1.configure(text=message_to_display)
         another = "Human_score:{}".format(res2)
@@ -26,10 +34,10 @@ class MyDelegateonThePC(object):
 
 
 def main():
-    interface()
-
-
-def interface():
+    """
+    main() sets up the tkinter window and  calls necessary functions to send and receive information from
+    the robot.
+    """
     t = TimeCount()
     root = tkinter.Tk()
     root.title = 'Tag'
@@ -71,6 +79,11 @@ def interface():
 
 
 def countdown(t):
+    """
+    :param t:
+    :return: Nothing
+    creates a countdown when called
+    """
     entry = t.entry_for_countdown
     contents_of_entry_box = entry.get()
     num = float(contents_of_entry_box)
