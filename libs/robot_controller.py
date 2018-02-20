@@ -59,6 +59,10 @@ class Snatch3r(object):
         if degrees_to_turn > 0:
             self.left_motor.run_to_rel_pos(speed_sp=turn_speed_sp, position_sp=-degrees_to_turn*5, stop_action=brake)
             self.right_motor.run_to_rel_pos(speed_sp=turn_speed_sp, position_sp=degrees_to_turn*5, stop_action=brake)
+        else:
+            print('hihihi')
+            self.left_motor.run_to_rel_pos(speed_sp=turn_speed_sp, position_sp=-degrees_to_turn*5, stop_action=brake)
+            self.right_motor.run_to_rel_pos(speed_sp=turn_speed_sp, position_sp=degrees_to_turn*5, stop_action=brake)
         self.left_motor.wait_while(ev3.Motor.STATE_RUNNING)
         self.right_motor.wait_while(ev3.Motor.STATE_RUNNING)
 
@@ -204,15 +208,5 @@ class Snatch3r(object):
         self.right_motor.run_forever(right_speed)
         return self.color_sensor.reflected_light_intensity
 
-    def drive_series(self, driveLocations):
-        """ takes in a list of pixels to drive to and drives there
-        Input: driveLocations(list of rgPoints
-        Output: None """
-        initialDir = [1,0]
-    #     First, orient in the right direction
 
-
-
-    def drive_series_turn_degrees(self, driveLocations):
-        None
 
