@@ -39,7 +39,7 @@ class MyDelegateOnThePc(object):
 
     def change_points(self, diff_points):
         self.points = self.points + diff_points
-        print("Received: ", diff_points)
+        # print("Received: ", diff_points)
         message_to_display = "{} points.".format(self.points)
         # self.display_label.configure(text=message_to_display)
         self.display_label["text"] = message_to_display

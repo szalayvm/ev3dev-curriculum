@@ -27,7 +27,6 @@ def main():
         print(robot.color_sensor.color, robot.color_sensor.reflected_light_intensity)
         if robot.color_sensor.color == 1:
             mqtt_client.send_message("change_points", 10)
-            print('this is where points should be done')
         if robot.touch_sensor.is_pressed:
             ev3.Sound.speak("Done")
         if btn.backspace:
