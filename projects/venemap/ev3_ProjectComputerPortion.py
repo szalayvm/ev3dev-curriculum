@@ -77,11 +77,11 @@ def main():
 
     instructions = "Click to set waypoints to drive to"
     label = ttk.Label(main_frame, text=instructions)
-    label.grid(columnspan=2)
+    label.grid(columnspan=3)
 
     # Make a tkinter.Canvas on a Frame.
     canvas = tkinter.Canvas(main_frame, background="lightgray", width=400, height=300)
-    canvas.grid(columnspan=2)
+    canvas.grid(columnspan=3)
     # Make callbacks for mouse click events.
     canvas.bind("<Button-1>", lambda event: left_mouse_click(event, my_delegate))
 
@@ -90,16 +90,16 @@ def main():
     clear_button.grid(row=3, column=0)
     clear_button["command"] = lambda: clear(canvas, my_delegate)
 
-    testButton = ttk.Button(main_frame, text="testArray")
-    testButton.grid(row=3,column=1)
-    testButton['command'] = lambda: print(my_delegate.driveLocations, my_delegate.lengths)
+    # testButton = ttk.Button(main_frame, text="testArray")
+    # testButton.grid(row=3,column=4)
+    # testButton['command'] = lambda: print(my_delegate.driveLocations, my_delegate.lengths)
 
     quit_button = ttk.Button(main_frame, text="Quit")
     quit_button.grid(row=3, column=2)
     quit_button["command"] = lambda: quit_program(mqtt_client)
 
     beginDrive = ttk.Button(main_frame, text="Drive")
-    beginDrive.grid(row=2, column=3)
+    beginDrive.grid(row=3, column=1)
     beginDrive["command"] = lambda: beginDriving(mqtt_client, my_delegate.driveLocations, my_delegate.driveDirectionVectors, my_delegate.lengths)
 
     # Create an MQTT connection
