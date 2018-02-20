@@ -92,7 +92,7 @@ def main():
 
     testButton = ttk.Button(main_frame, text="testArray")
     testButton.grid(row=3,column=1)
-    testButton['command'] = lambda: print(my_delegate.driveLocations, my_delegate.driveDirectionVectors)
+    testButton['command'] = lambda: print(my_delegate.driveLocations, my_delegate.lengths)
 
     quit_button = ttk.Button(main_frame, text="Quit")
     quit_button.grid(row=3, column=2)
@@ -171,8 +171,8 @@ def beginDriving(mqtt_client, driveLocations, driveVectors, lengths):
             turn_amount = -turn_amount
         print('turn amt', turn_amount)
         mqtt_client.send_message("turn_degrees", [turn_amount, 400])
-        time.sleep(3)
-        # mqtt_client.send_message("drive_inches", [5, 400])
+        driveLength = lengths[k-1] * .1
+        mqtt_client.send_message("drive_inches", [driveLength, 400])
 
 
 

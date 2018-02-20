@@ -208,15 +208,5 @@ class Snatch3r(object):
         self.right_motor.run_forever(right_speed)
         return self.color_sensor.reflected_light_intensity
 
-    def drive_series(self, driveLocations):
-        """ takes in a list of pixels to drive to and drives there
-        Input: driveLocations(list of rgPoints
-        Output: None """
-        initialDir = [1,0]
-    #     First, orient in the right direction
 
-
-
-    def drive_series_turn_degrees(self, driveLocations):
-        None
 
