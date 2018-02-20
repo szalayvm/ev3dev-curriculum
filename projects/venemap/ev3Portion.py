@@ -25,16 +25,18 @@ def main():
             print("up")
             ev3.Leds.all_off()
         print(robot.color_sensor.color, robot.color_sensor.reflected_light_intensity)
+        if robot.color_sensor.color == 1:
+            mqtt_client.send_message("change_points", 10)
+            print('this is where points should be done')
         if robot.touch_sensor.is_pressed:
             ev3.Sound.speak("Done")
-            break
         if btn.backspace:
             break
         time.sleep(0.01)  # Best practice to have a short delay to avoid working too hard between loop iterations.
 
     # Best practice to leave the LEDs on after you finish a program so you don't put away the robot while still on.
-    # ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
-    # ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
+    ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
+    ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
     robot.loop_forever()  # Calls a function that has a while True: loop within it to avoid letting the program end.
 
 
