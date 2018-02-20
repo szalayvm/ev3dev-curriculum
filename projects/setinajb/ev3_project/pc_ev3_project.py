@@ -7,9 +7,6 @@ Author: Jaclyn Setina."""
 import tkinter
 from tkinter import ttk
 from tkinter import *
-import random
-import ev3dev.ev3 as ev3
-import time
 import mqtt_remote_method_calls as com
 
 
@@ -22,15 +19,13 @@ class MyDelegateOnThePc(object):
 
     def change_points(self, diff_points):
         self.points = self.points + diff_points
-        print("Received: ", self.points)
+        print("Received: ", diff_points)
         message_to_display = "{} points.".format(self.points)
         # self.display_label.configure(text=message_to_display)
         self.display_label["text"] = message_to_display
 
 
 def main():
-    mqtt_client = com.MqttClient()
-    mqtt_client.connect_to_ev3()
 
     root = tkinter.Tk()
     root.title("MQTT Remote")
@@ -49,28 +44,23 @@ def main():
 
     forward_button = ttk.Button(main_frame, text="Forward")
     forward_button.grid(row=2, column=1)
-    forward_button['command'] = lambda: print("Forward button")
-    forward_button['command'] = lambda: handle_forward(mqtt_client, 900, 900)
+    forward_button['command'] = lambda: handle_forward(mqtt_client, 500, 500)
 
     left_button = ttk.Button(main_frame, text="Left")
     left_button.grid(row=3, column=0)
-    left_button['command'] = lambda: print("Left button")
-    left_button['command'] = lambda: handle_left(mqtt_client, 900, 900)
+    left_button['command'] = lambda: handle_left(mqtt_client, 500, 500)
 
     stop_button = ttk.Button(main_frame, text="Stop")
     stop_button.grid(row=3, column=1)
-    stop_button['command'] = lambda: print("Stop button")
     stop_button['command'] = lambda: handle_stop(mqtt_client)
 
     right_button = ttk.Button(main_frame, text="Right")
     right_button.grid(row=3, column=2)
-    right_button['command'] = lambda: print("Right button")
-    right_button['command'] = lambda: handle_right(mqtt_client, 900, 900)
+    right_button['command'] = lambda: handle_right(mqtt_client, 500, 500)
 
     back_button = ttk.Button(main_frame, text="Back")
     back_button.grid(row=4, column=1)
-    back_button['command'] = lambda: print("Back button")
-    back_button['command'] = lambda: handle_back(mqtt_client, 900, 900)
+    back_button['command'] = lambda: handle_back(mqtt_client, 500, 500)
 
     # Buttons for quit and exit
     q_button = ttk.Button(main_frame, text="Quit")
@@ -85,8 +75,6 @@ def main():
     mqtt_client = com.MqttClient(score_delegate)
     mqtt_client.connect_to_ev3()
 
-
-
     root.mainloop()
 
 # ----------------------------------------------------------------------
@@ -95,22 +83,27 @@ def main():
 
 
 def handle_forward(mqtt_client, left_speed, right_speed):
+    print('moving forward')
     mqtt_client.send_message('drive_forever', [900, 900])
 
 
 def handle_left(mqtt_client, left_speed, right_speed):
+    print('moving left')
     mqtt_client.send_message('drive_forever', [-1*900, 900])
 
 
 def handle_stop(mqtt_client):
+    print('stop')
     mqtt_client.send_message('stop_motors')
 
 
 def handle_right(mqtt_client, left_speed, right_speed):
+    print('moving right')
     mqtt_client.send_message('drive_forever', [900, -1*900])
 
 
 def handle_back(mqtt_client, left_speed, right_speed):
+    print('moving back')
     mqtt_client.send_message('drive_forever', [-1*900, -1*900])
 
 
