@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """"
-Contains final project code for CSSE120.
+The project demonstrates a robot that is capable of playing a modified version of "tag" with a human.
+This file contains the code that is uploaded on the robot, and is used to send back information to the computer.
+It has two  main functions:
+
 Author: Victoria Szalay
 """
 
@@ -9,6 +12,7 @@ import robot_controller as robo
 import time
 import ev3dev.ev3 as ev3
 import mqtt_remote_method_calls as com
+import math
 
 class MyDelegate(object):
     """receives function calls from PC"""
@@ -32,7 +36,7 @@ def main():
     print(" Robot Tag")
     print(" Press Back to exit when done.")
     print("--------------------------------------------")
-    ev3.Sound.speak("Robot").wait()
+    ev3.Sound.speak("Robot Tag").wait()
 
     my_delegate = MyDelegate()
     mqtt_client = com.MqttClient(my_delegate)
@@ -53,13 +57,48 @@ def seek(time_alloted):
     start = time.time()
     """The robot is to find the person hiding."""
     robot = robo.Snatch3r()
-    save = robot.seek_beacon()
-    end = time.time()
-    ev3.Sound.speak("I will catch you")
-    total = end - start
-    if save == True:
-        ev3.Sound.speak("I caught you!")
-        return  time_alloted - total
+    beacon_seeker = ev3.BeaconSeeker(channel=1)
+
+    forward_speed = 300
+    turn_speed = 100
+
+    while time_alloted > time.time()-start:
+        current_heading = beacon_seeker.heading
+        current_distance = beacon_seeker.distance
+        if current_distance == -128:
+            # If the IR Remote is not found just sit idle for this program until it is moved.
+            print("IR Remote not found. Distance is -128")
+            robot.drive_forever(-1 * turn_speed, turn_speed)
+        else:
+            if math.fabs(current_heading) < 2:
+                # Close enough of a heading to move forward
+                print("On the right heading. Distance: ", current_distance)
+                if current_distance == 1:
+                    robot.drive_inches(4, 300)
+                    robot.stop_motors()
+                    ev3.Sound.speak("Tag")
+                    end = time.time()
+                    total = end - start
+                    return time_alloted - total
+                if current_distance > 1:
+                    robot.drive_forever(forward_speed, forward_speed)
+            if 2 < math.fabs(current_heading) < 10:
+                print("Adjusting heading:", current_heading)
+                if current_heading < 0:
+                    robot.drive_forever(-1 * turn_speed, turn_speed)
+                if current_heading > 0:
+                    robot.drive_forever(turn_speed, -1 * turn_speed)
+            if math.fabs(current_heading) > 10:
+                print("Heading is too far off to fix", current_heading)
+                robot.drive_forever(-1 * turn_speed, turn_speed)
+
+
+        time.sleep(0.2)
+
+    robot.stop_motors()
+    ev3.Sound.speak("Ran out of time")
+    return 1
+
 
 
 
@@ -104,21 +143,6 @@ def run(time_alloted):
     return 0
 
 
-
-
-
-
-
-
-
-def return_to_home():
-    """The robot is to return to home base once return base button is pushed on pc"""
-    start = time.time()
-    robot = robo.Snatch3r
-    robot.seek_beacon()
-    end = time.time()
-    total = end - start
-    return total
 
 def score(hi):
     hi.count = hi.count + hi.n
