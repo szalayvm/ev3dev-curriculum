@@ -34,26 +34,27 @@ def main():
     while True:
         dp = 0
         ev3.Leds.all_off()
-        if robot.color_sensor.color == ev3.ColorSensor.COLOR_YELLOW:
-            print("Hit yellow")
-            dp = -10
-            ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
-            ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
-        if robot.color_sensor.color == ev3.ColorSensor.COLOR_BLUE:
-            print("Hit blue")
-            dp = -5
-            ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
-            ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
-            robot.turn_degrees(360, 900)
         if robot.color_sensor.color == ev3.ColorSensor.COLOR_RED:
             print("Hit red")
             dp = 15
             ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
             ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
+        elif robot.color_sensor.color == ev3.ColorSensor.COLOR_YELLOW:
+            print("Hit yellow")
+            dp = -10
+            ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
+            ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
+        elif robot.color_sensor.color == ev3.ColorSensor.COLOR_BLUE:
+            print("Hit blue")
+            dp = -5
+            ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.RED)
+            ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.RED)
+            robot.turn_degrees(380, 900)
+
 
         if dp != 0:
             mqtt_client.send_message("change_points", [dp])
-            time.sleep(4)
+            # time.sleep(4)
             ev3.Leds.all_off()
         time.sleep(0.05)
 
